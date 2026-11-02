@@ -1,8 +1,8 @@
-\# Akış Diyagramları
+# Akış Diyagramları
 
 
 
-\## Akış 1: Uçtan uca sorgu → brifing (ReAct + durma ölçütü)
+## Akış 1: Uçtan uca sorgu → brifing (ReAct + durma ölçütü)
 
 
 
@@ -14,39 +14,39 @@ Kullanıcı sorgusu alt sorulara bölünür, araştırma döngüsü iki durma ö
 
 flowchart TD
 
-&#x20;   U(\[Kullanıcı sorgusu]) --> API\[FastAPI Gateway<br/>kimlik doğrulama]
+    U([Kullanıcı sorgusu]) --> API[FastAPI Gateway<br/>kimlik doğrulama]
 
-&#x20;   API --> ORC1\[Orkestratör Ajan<br/>sorguyu alt sorulara böler]
+    API --> ORC1[Orkestratör Ajan<br/>sorguyu alt sorulara böler]
 
-&#x20;   ORC1 --> BUDGET{Döngü ve token<br/>bütçesi doldu mu?}
-
-
-
-&#x20;   BUDGET -- Hayır --> RES\[Araştırma Ajanı<br/>SearXNG ile ara,<br/>Trafilatura ile metni çek]
-
-&#x20;   RES --> EXTR\[Bilgi Çıkarım Ajanı<br/>varlık ve ilişki çıkarır]
-
-&#x20;   EXTR --> NEO\[(Neo4j<br/>Bilgi Grafiği)]
-
-&#x20;   NEO --> GAIN{Bilgi kazancı<br/>eşiğin altında mı?}
+    ORC1 --> BUDGET{Döngü ve token<br/>bütçesi doldu mu?}
 
 
 
-&#x20;   GAIN -- Hayır, bilgi eksik --> ORC2\[Orkestratör<br/>yeni alt sorgu üretir]
+    BUDGET -- Hayır --> RES[Araştırma Ajanı<br/>SearXNG ile ara,<br/>Trafilatura ile metni çek]
 
-&#x20;   ORC2 --> BUDGET
+    RES --> EXTR[Bilgi Çıkarım Ajanı<br/>varlık ve ilişki çıkarır]
 
+    EXTR --> NEO[(Neo4j<br/>Bilgi Grafiği)]
 
-
-&#x20;   GAIN -- Evet, yeterli --> VER
-
-&#x20;   BUDGET -- Evet, bütçe bitti --> VER\[Doğrulama Ajanı<br/>çapraz doğrulama,<br/>güven puanı]
+    NEO --> GAIN{Bilgi kazancı<br/>eşiğin altında mı?}
 
 
 
-&#x20;   VER --> REP\[Raporlama Ajanı<br/>kaynak bağlantılı brifing]
+    GAIN -- Hayır, bilgi eksik --> ORC2[Orkestratör<br/>yeni alt sorgu üretir]
 
-&#x20;   REP --> OUT(\[Güvenilirlik damgalı brifing])
+    ORC2 --> BUDGET
+
+
+
+    GAIN -- Evet, yeterli --> VER
+
+    BUDGET -- Evet, bütçe bitti --> VER[Doğrulama Ajanı<br/>çapraz doğrulama,<br/>güven puanı]
+
+
+
+    VER --> REP[Raporlama Ajanı<br/>kaynak bağlantılı brifing]
+
+    REP --> OUT([Güvenilirlik damgalı brifing])
 
 ```
 
