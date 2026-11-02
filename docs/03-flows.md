@@ -38,3 +38,36 @@ flowchart TD
     VER -.-> LOG
     REP -.-> LOG
 ```
+
+
+## Akış 2: Web tarama ve içerik çekme (bot engeli, fallback)
+
+Araştırma Ajanı, Orkestratör'den gelen alt sorguyu önce cache'te arar, bulamazsa SearXNG ile arar ve Trafilatura ile sayfa metnini çeker. Bot engelinde proxy rotasyonu denenir, sorun sürerse KAP API ve doğrulanmış RSS beslemelerine geçilir. Çekilen her sayfa anlık görüntü olarak saklanır (test kümesinin temeli). İlgili ister: REQ-01, REQ-06.
+
+```mermaid
+flowchart TD
+    IN(["Orkestratör: alt sorgu"]) --> CACHE{"Redis cache'te<br/>sonuç var mı?"}
+    CACHE -->|Evet| OUT
+    CACHE -->|Hayır| SX["SearXNG<br/>arama, URL listesi"]
+    SX --> TF["Trafilatura<br/>sayfa metnini çek"]
+    TF --> OK{"İçerik alındı mı?"}
+
+    OK -->|Evet| SNAP[("Anlık Görüntü Deposu<br/>dondurulmuş sayfa kopyası")]
+    SNAP --> PG[("PostgreSQL<br/>kaynak kaydı, erişim tarihi")]
+    PG --> OUT(["Ham metin ve kaynak bilgisi<br/>Bilgi Çıkarım Ajanı'na"])
+
+    OK -->|Hayır| BOT{"Bot engeli mi?<br/>Cloudflare, 403, captcha"}
+    BOT -->|Hayır, başka hata| FB
+    BOT -->|Evet| PRX["Proxy Rotasyonu<br/>yeni proxy ile tekrar dene"]
+    PRX --> RETRY{"Deneme sınırı<br/>aşıldı mı?"}
+    RETRY -->|Hayır| TF
+    RETRY -->|Evet| FB["Yedek kaynak<br/>KAP API ve doğrulanmış RSS"]
+
+    FB --> FOK{"Yedekten içerik<br/>alındı mı?"}
+    FOK -->|Evet| SNAP
+    FOK -->|Hayır| FAIL(["Kaynak alınamadı<br/>Orkestratör'e bildirilir"])
+
+    TF -.-> LOG["Loglama ve Telemetri<br/>hata türü, deneme sayısı, gecikme"]
+    PRX -.-> LOG
+    FB -.-> LOG
+```
