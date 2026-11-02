@@ -8,7 +8,7 @@ Bir kullanıcı sorgusunun raporlanmış brifinge dönüşene kadar geçtiği mo
 
 ```mermaid
 
-flowchart LR
+flowchart TB
 
     subgraph S1 ["1. Planlama"]
 
@@ -141,21 +141,13 @@ flowchart LR
 
 
 | Aşama | Model | Neden |
-
 |-------|-------|-------|
-
 | Planlama | Yönlendirici Model (API) | Alt sorgu üretimi akıl yürütme gerektirir |
-
 | Veri toplama | Yok | Arama ve metin çekme araç işi |
-
 | Bilgi çıkarımı | Yerel Model (Ollama, Llama 3) | Yüksek hacim, standart görev, token maliyeti sıfır |
-
 | Sorgudan Cypher | Yönlendirici Model (API) | Hatalı sorgu graf sonucunu bozar, kaliteli model gerekir |
-
 | Doğrulama | Model yok, kural ve puanlama | Tekrarlanabilir ve ölçülebilir olması için |
-
 | Raporlama | Yönlendirici Model (API) | Kullanıcının gördüğü çıktı |
-
 | Atıf doğrulama | Embedding Modeli | İddia ve kaynak metin benzerliği |
 
 
