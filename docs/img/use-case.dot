@@ -1,0 +1,69 @@
+digraph UseCase {
+  graph [rankdir=LR, fontname="DejaVu Sans", fontsize=18, nodesep=0.28, ranksep=3.2, splines=true, newrank=true, pad=0.3, bgcolor="white"];
+  node  [fontname="DejaVu Sans", fontsize=12];
+  edge  [fontname="DejaVu Sans", fontsize=10, arrowhead=none, color="#555555"];
+
+  // Aktörler (sol)
+  node [shape=box, style="rounded,filled", fillcolor="#DCE9FF", color="#2F5DA8", penwidth=1.6, width=1.7, height=0.7];
+  ANA [label="Analist"];
+  ADM [label="Yönetici"];
+  KUR [label="Harici Kurumsal\nYazılım"];
+
+  // Dış sistemler (sağ)
+  node [fillcolor="#EDEDED", color="#777777"];
+  SEA [label="SearXNG / Web"];
+  KAP [label="KAP API / RSS"];
+  LLM [label="LLM\n(Ollama / API)"];
+  NEO [label="Neo4j\nBilgi Grafiği"];
+
+  // Sistem sınırı
+  subgraph cluster_sys {
+    label="Otonom Finansal İstihbarat Platformu"; labeljust=c; fontsize=16;
+    style="rounded"; color="#2F5DA8"; penwidth=2; margin=24;
+
+    node [shape=ellipse, style=filled, fillcolor="#FFF6DD", color="#B58A00", penwidth=1.2, width=3.2, height=0.65, fontsize=12];
+
+    subgraph cluster_a { label="Araştırma"; style="rounded,dashed"; color="#999999"; fontsize=13;
+      UC14 [label="Giriş yap / kayıt ol"];
+      UC13 [label="API üzerinden sorgu gönder"];
+      UC1  [label="Araştırma sorgusu gönder"];
+      UC2  [label="Araştırma ilerlemesini izle"];
+      UC9  [label="Araştırmayı iptal et"];
+      UC7  [label="Geçmiş araştırmalara eriş"];
+    }
+    subgraph cluster_b { label="Rapor ve güvenilirlik"; style="rounded,dashed"; color="#999999"; fontsize=13;
+      UC4 [label="İddia kaynağını ve\nbağlantı, erişim tarihi, güven\npuanını incele"];
+      UC3 [label="Brifing raporunu görüntüle"];
+      UC5 [label="Çelişki ve düşük güven\nuyarılarını gör"];
+      UC8 [label="Raporu dışa aktar"];
+      UC6 [label="Bilgi grafiğini keşfet"];
+    }
+    subgraph cluster_c { label="Yönetim ve entegrasyon"; style="rounded,dashed"; color="#999999"; fontsize=13;
+      UC10 [label="Kullanıcı ve yetki yönetimi"];
+      UC11 [label="Token bütçesi ve\nmodel ayarlarını yönet"];
+      UC12 [label="Sistem loglarını ve\ntelemetriyi izle"];
+    }
+  }
+
+  // Aktör - use case
+  ANA -> UC14; ANA -> UC1; ANA -> UC2; ANA -> UC9; ANA -> UC7;
+  ANA -> UC3;  ANA -> UC4; ANA -> UC5; ANA -> UC8; ANA -> UC6;
+  ADM -> UC10; ADM -> UC11; ADM -> UC12;
+  KUR -> UC13;
+
+  // include / extend
+  edge [style=dashed, arrowhead=vee, color="#B03030", fontcolor="#B03030", constraint=false];
+  UC1  -> UC2  [label="«include»"];
+  UC3  -> UC4  [label="«include»"];
+  UC5  -> UC3  [label="«extend»\n(çelişki varsa)"];
+  UC13 -> UC1  [label="«include»"];
+
+  // Dış sistemler
+  edge [style=solid, arrowhead=none, color="#888888", fontcolor="#555555", constraint=true];
+  UC1 -> SEA; UC1 -> KAP; UC1 -> LLM; UC1 -> NEO;
+  UC6 -> NEO;
+
+  { rank=source; ANA; ADM; KUR; }
+  { rank=same; UC14; UC1; UC2; UC9; UC7; UC3; UC4; UC5; UC8; UC6; UC10; UC11; UC12; UC13; }
+  { rank=sink; SEA; KAP; LLM; NEO; }
+}

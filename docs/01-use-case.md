@@ -1,6 +1,13 @@
 # Use Case Diyagramı
 
-Mermaid'de yerel use case diyagramı bulunmadığı için `flowchart` ile gösterilmiştir. Aktörler yuvarlak, use case'ler oval, sistem sınırı kutu olarak çizilmiştir.
+Sol tarafta sistemi kullanan aktörler, ortada sistem sınırı içindeki use case'ler, sağ tarafta sistemin kullandığı dış sistemler yer alır. Kesikli kırmızı oklar `include` ve `extend` ilişkilerini gösterir.
+
+![Use case diyagramı](img/use-case.png)
+
+Görsel Graphviz ile üretilmiştir, kaynak dosyası [img/use-case.dot](img/use-case.dot) (vektör sürümü: [img/use-case.svg](img/use-case.svg)). Değiştirmek için `dot -Tpng -Gdpi=110 img/use-case.dot -o img/use-case.png` komutu yeterlidir.
+
+<details>
+<summary>Mermaid sürümü (GitHub'da doğrudan çizilir, daha yoğun görünür)</summary>
 
 ```mermaid
 flowchart LR
@@ -59,6 +66,8 @@ flowchart LR
     UC1 --- NEO
     UC6 --- NEO
 ```
+
+</details>
 
 ## Aktörler
 
