@@ -24,7 +24,7 @@
 
 | Görev | Sorumlu | Gözden geçiren |
 |-------|---------|----------------|
-| Figma prototipi (en az 6 ekran) | Sıla | Emre |
+| Figma prototipi (en az 6 ekran), [issue #14](https://github.com/eemreus/Multi-Agent-ve-GraphRAG-Tabanl-Otonom-Finansal-stihbarat-Platformu/issues/14) | Emre | Sıla |
 | ER diyagramı (PostgreSQL) | Emre | Sıla |
 | Neo4j graf şeması | Emre | Sıla |
 | Veri sözlüğü | Emre + Sıla | Karşılıklı |
