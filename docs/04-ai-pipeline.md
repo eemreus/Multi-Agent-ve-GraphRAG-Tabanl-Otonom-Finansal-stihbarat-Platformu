@@ -42,6 +42,14 @@ flowchart TB
 
         SCHEMA -->|Hayır, en fazla 2 tekrar| NER
 
+        SCHEMA -->|2 tekrardan sonra hâlâ geçersiz| ESC["Chunk bir kez<br/>Yönlendirici Modele, API<br/>yükseltilir"]
+
+        ESC --> SCHEMA2{"Çıktı şemaya<br/>uyuyor mu?"}
+
+        SCHEMA2 -->|Evet| DEDUP
+
+        SCHEMA2 -->|Hayır| SKIP["Chunk atlanır<br/>başarısız olarak loglanır"]
+
     end
 
 
@@ -144,7 +152,7 @@ flowchart TB
 |-------|-------|-------|
 | Planlama | Yönlendirici Model (API) | Alt sorgu üretimi akıl yürütme gerektirir |
 | Veri toplama | Yok | Arama ve metin çekme araç işi |
-| Bilgi çıkarımı | Yerel Model (Ollama, Llama 3) | Yüksek hacim, standart görev, token maliyeti sıfır |
+| Bilgi çıkarımı | Yerel Model (Ollama, Llama 3). Şema 2 tekrarda tutmazsa chunk bir kez API modeline yükseltilir | Yüksek hacim, standart görev, token maliyeti sıfır. Yükseltme yalnızca zor chunk'lar için, maliyet düşük kalır |
 | Sorgudan Cypher | Yönlendirici Model (API) | Hatalı sorgu graf sonucunu bozar, kaliteli model gerekir |
 | Doğrulama | Model yok, kural ve puanlama | Tekrarlanabilir ve ölçülebilir olması için |
 | Raporlama | Yönlendirici Model (API) | Kullanıcının gördüğü çıktı |
