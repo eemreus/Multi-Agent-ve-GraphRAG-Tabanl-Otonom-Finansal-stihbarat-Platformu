@@ -26,7 +26,7 @@ Akış diyagramlarında hata dalları gösterilmiştir (bot engeli, zaman aşım
 | 3 | [Neo4j Graf Şeması](06-neo4j-graf-semasi.md) | Emre | Tamamlandı |
 | 4 | [Veri Sözlüğü](07-veri-sozlugu.md) | Emre + Sıla | Tamamlandı |
 | 5 | [Teknoloji Yığını Tablosu](08-teknoloji-yigini.md) | Emre + Sıla | Tamamlandı (öneri, açık kararlar Hafta 3'te netleşir) |
-| 6 | 5 dk sınıf sunumu | Emre + Sıla | Bekliyor |
+| 6 | [5 dk sınıf sunumu](sunum/ParaGoz-Hafta1-2-Sunum.pdf) ([PowerPoint](sunum/ParaGoz-Hafta1-2-Sunum.pptx), konuşma notları dosyanın içinde) | Emre + Sıla | Tamamlandı |
 
 ## İsterler ve belgeler
 
