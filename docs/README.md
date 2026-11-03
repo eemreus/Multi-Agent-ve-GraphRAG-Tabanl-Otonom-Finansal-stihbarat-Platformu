@@ -21,7 +21,7 @@ Akış diyagramlarında hata dalları gösterilmiştir (bot engeli, zaman aşım
 
 | # | Belge | Sorumlu | Durum |
 |---|-------|---------|-------|
-| 1 | Figma tıklanabilir prototip (en az 6 ekran) | Sıla | Bekliyor |
+| 1 | Figma tıklanabilir prototip (en az 6 ekran), [issue #14](https://github.com/eemreus/Multi-Agent-ve-GraphRAG-Tabanl-Otonom-Finansal-stihbarat-Platformu/issues/14) | Emre | Bekliyor |
 | 2 | [ER Diyagramı (PostgreSQL)](05-er-diyagrami.md) | Emre | Tamamlandı |
 | 3 | [Neo4j Graf Şeması](06-neo4j-graf-semasi.md) | Emre | Tamamlandı |
 | 4 | [Veri Sözlüğü](07-veri-sozlugu.md) | Emre + Sıla | Tamamlandı |
