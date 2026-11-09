@@ -1,0 +1,4 @@
+pydantic>=2.5
+requests>=2.31
+neo4j>=5.20
+pytest>=8.0
