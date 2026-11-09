@@ -31,6 +31,22 @@
 | Teknoloji yığını tablosu | Emre + Sıla | Karşılıklı |
 | 5 dk sunum hazırlığı | Emre + Sıla | - |
 
+## Hafta 3: Veri + AI Baseline (Demo)
+
+Ayrıntı: [10-hafta3-plan.md](10-hafta3-plan.md)
+
+| Görev | Sorumlu | Gözden geçiren |
+|-------|---------|----------------|
+| Veri toplama hattı (#18) | Sıla | Emre |
+| Dondurulmuş test seti ve etiketleme (#19) | Sıla, etiket Emre + Sıla | Karşılıklı |
+| EDA notebook'u (#20) | Emre | Sıla |
+| Neo4j ve varlık-ilişki çıkarımı (#21) | Emre | Sıla |
+| GraphRAG baseline (#22) | Emre | Sıla |
+| Vektör RAG baseline (#23) | Sıla | Emre |
+| Ölçüm ve hedef tablosu (#24) | Emre | Sıla |
+| Açık teknoloji kararları (#25) | Sıla | Emre |
+| 5 dk demo sunumu (#26) | Emre + Sıla | - |
+
 ## Genel not
 
 Bu dağılım bir başlangıç önerisidir, isterseniz değiştirilebilir. Önemli olan haftalar boyunca yükün dengeli kalması ve her iki kişinin commit geçmişinin repoda görünmesidir.

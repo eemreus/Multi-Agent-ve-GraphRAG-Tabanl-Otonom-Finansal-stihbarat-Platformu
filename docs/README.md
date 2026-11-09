@@ -28,6 +28,10 @@ Akış diyagramlarında hata dalları gösterilmiştir (bot engeli, zaman aşım
 | 5 | [Teknoloji Yığını Tablosu](08-teknoloji-yigini.md) | Emre + Sıla | Tamamlandı (öneri, açık kararlar Hafta 3'te netleşir) |
 | 6 | [5 dk sınıf sunumu](sunum/ParaGoz-Hafta1-2-Sunum.pdf) ([PowerPoint](sunum/ParaGoz-Hafta1-2-Sunum.pptx), konuşma notları dosyanın içinde) | Emre + Sıla | Tamamlandı |
 
+## Hafta 3 – Veri + AI Baseline (Demo)
+
+[Plan, şirket seçimi, test seti ve görevler](10-hafta3-plan.md). Durum: devam ediyor.
+
 ## İsterler ve belgeler
 
 | İster | GitHub Issue | İlgili belgeler |
