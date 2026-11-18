@@ -1,0 +1,9 @@
+# Yerel geliştirme için SearXNG (meta arama motoru). Çalıştırma: docker compose -f infra/searxng/docker-compose.yml up -d
+services:
+  searxng:
+    image: searxng/searxng
+    container_name: paragoz-searxng
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./config:/etc/searxng
