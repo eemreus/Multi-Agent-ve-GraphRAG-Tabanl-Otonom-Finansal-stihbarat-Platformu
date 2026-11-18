@@ -113,3 +113,21 @@ def test_extract_survives_partially_invalid():
 
 def test_evidence_curly_quotes():
     assert evidence_in_text("Koç’un payı", "Koç'un payı yüzde 5")
+
+
+def test_salvage_truncated_json():
+    from src.graf.extractor import salvage_json
+    kesik = '{"entities":[{"label":"Company","name":"Koç Holding"}],"relations":[{"type":"PARTNER_OF","source":"a","tar'
+    d = salvage_json(kesik)
+    assert d["entities"][0]["name"] == "Koç Holding"
+
+
+def test_timeout_does_not_crash():
+    import requests
+    n = {"c": 0}
+
+    def gen(p):
+        n["c"] += 1
+        raise requests.exceptions.ReadTimeout("t")
+    r = extract_chunk(TEXT, gen)
+    assert r.failed and n["c"] == 3 and "zaman aşımı" in r.error

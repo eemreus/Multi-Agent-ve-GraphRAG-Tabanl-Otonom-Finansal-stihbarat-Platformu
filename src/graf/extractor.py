@@ -58,6 +58,25 @@ def _norm_ws(s: str) -> str:
 _LABELS = {l.lower(): l for l in ("Company", "Person", "Event", "Location", "Metric")}
 
 
+def salvage_json(raw: str):
+    """Çıktı token sınırında kesildiyse son tam nesneye kadar kırpıp parantezleri kapatır."""
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    pos = len(raw)
+    for _ in range(60):
+        pos = raw.rfind("}", 0, pos)
+        if pos < 0:
+            break
+        for kapanis in ("", "]}", "}]}", "]}]}"):
+            try:
+                return json.loads(raw[: pos + 1] + kapanis)
+            except json.JSONDecodeError:
+                continue
+    raise json.JSONDecodeError("kurtarılamadı", raw, 0)
+
+
 def parse_lenient(data: dict) -> tuple[Extraction, list[str]]:
     """Küçük modeller kusurlu JSON üretir: tüm çıktıyı atmak yerine geçerli varlık ve ilişkileri
     tek tek alır, geçersizleri nedenleriyle birlikte döndürür."""
@@ -110,8 +129,8 @@ def ollama_generate(prompt: str, model: str = "llama3.1:8b", url: str = "http://
     r = requests.post(
         f"{url}/api/generate",
         json={"model": model, "prompt": prompt, "stream": False, "format": "json",
-              "options": {"temperature": 0}},
-        timeout=300,
+              "options": {"temperature": 0, "num_predict": 1500, "num_ctx": 4096, "repeat_penalty": 1.1}},
+        timeout=240,
     )
     r.raise_for_status()
     return r.json()["response"]
@@ -132,10 +151,14 @@ def extract_chunk(text: str, generate: Callable[[str], str]) -> ChunkResult:
     prompt = PROMPT.format(rules=rules, text=text)
     last_err = None
     for attempt in range(1, MAX_RETRIES + 2):  # ilk deneme + 2 yeniden deneme
-        raw = generate(prompt if last_err is None else
-                       f"{prompt}\n\nÖnceki cevap geçersizdi ({last_err}). Yalnızca düzeltilmiş JSON ver.")
         try:
-            data = json.loads(raw)
+            raw = generate(prompt if last_err is None else
+                           f"{prompt}\n\nÖnceki cevap geçersizdi ({last_err}). Yalnızca düzeltilmiş JSON ver.")
+        except requests.exceptions.Timeout:
+            last_err = "model zaman aşımı"
+            continue
+        try:
+            data = salvage_json(raw)
             if not isinstance(data, dict):
                 raise ValueError("JSON nesne değil")
             ext, notlar = parse_lenient(data)
@@ -154,4 +177,4 @@ def extract_chunk(text: str, generate: Callable[[str], str]) -> ChunkResult:
 
 
 def extract_document(text: str, generate: Callable[[str], str]) -> list[ChunkResult]:
-    return [extract_chunk(c, generate) for c in chunk_text(text)]
+    return [extract_chunk(c, generate) for c in chunk_text(text, 1800)]
