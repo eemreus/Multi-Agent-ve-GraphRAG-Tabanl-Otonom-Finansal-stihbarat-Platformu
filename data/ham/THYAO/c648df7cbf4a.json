@@ -9,5 +9,6 @@
   "erisim_tarihi": "2026-11-18T19:16:50+00:00",
   "sha256": "c648df7cbf4af7320cd379ae62a27e29860178d0fca3102565084149ca036bd4",
   "metin_sha256": "5f62999ad2c2e46ce6242959613cbffeaba3fc88ecadfcd3ffe103151b75f2be",
-  "metin_uzunlugu": 50546
+  "metin_uzunlugu": 50546,
+  "kaynak_turu": "ansiklopedi"
 }

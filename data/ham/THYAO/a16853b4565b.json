@@ -9,5 +9,6 @@
   "erisim_tarihi": "2026-11-18T19:23:12+00:00",
   "sha256": "a16853b4565bd37ac1132201d035fd42f9b2c0f1f79f0762d7f8c7c0d2b1b177",
   "metin_sha256": "d46546728214974a986902a76d985b7c22f5108a704fe581f7daa337c9e4f886",
-  "metin_uzunlugu": 1503
+  "metin_uzunlugu": 1503,
+  "kaynak_turu": "finans_portali"
 }

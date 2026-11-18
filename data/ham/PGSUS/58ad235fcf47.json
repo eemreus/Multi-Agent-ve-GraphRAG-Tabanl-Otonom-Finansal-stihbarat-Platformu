@@ -9,5 +9,6 @@
   "erisim_tarihi": "2026-11-18T19:25:56+00:00",
   "sha256": "58ad235fcf47c2f40d4ccf61048127c5d22fdc24d5bf618348abcfa8a81856cf",
   "metin_sha256": "80b4c4973d4262d0a916eaa195ecd79536f4477d0305e05f7fb461dff9d9797b",
-  "metin_uzunlugu": 3230
+  "metin_uzunlugu": 3230,
+  "kaynak_turu": "haber"
 }

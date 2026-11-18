@@ -21,6 +21,7 @@ HARIC_DESENLER = ("kap.org.tr/tr/sirket-bilgileri", "eksisozluk.com", "%e2%80", 
 MAKS_ALAN_ADI = 6                    # bir siteden sirket basina en fazla sayfa
 
 from .sorgular import SIRKETLER
+from .kaynak_turu import tur
 
 
 def normalize_url(url):
@@ -107,7 +108,7 @@ def kaydet(kod, sorgu, url, orijinal_url, baslik, ham, metin_ozetleri):
     (klasor / f"{sid}.txt").write_text(metin, encoding="utf-8")
     kunye = {
         "id": sid, "sirket": kod, "url": url, "orijinal_url": orijinal_url, "alan_adi": alan_adi(url),
-        "baslik": baslik, "sorgu": sorgu,
+        "baslik": baslik, "sorgu": sorgu, "kaynak_turu": tur(alan_adi(url)),
         "erisim_tarihi": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sha256": ozet, "metin_sha256": metin_ozeti, "metin_uzunlugu": len(metin),
     }
