@@ -32,6 +32,8 @@ Akış diyagramlarında hata dalları gösterilmiştir (bot engeli, zaman aşım
 
 [Plan, şirket seçimi, test seti ve görevler](10-hafta3-plan.md). Durum: devam ediyor.
 
+EDA: [notebooks/eda.ipynb](../notebooks/eda.ipynb) (veri havuzu analizi, grafikler GitHub'da görünür). Ham metinler telif nedeniyle repoda yok, künyeler `data/ham/` altında.
+
 ## İsterler ve belgeler
 
 | İster | GitHub Issue | İlgili belgeler |
