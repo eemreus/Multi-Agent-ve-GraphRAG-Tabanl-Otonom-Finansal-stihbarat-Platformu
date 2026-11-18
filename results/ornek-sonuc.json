@@ -1,0 +1,4 @@
+{"sources":{"demo1":"Koç Holding, Tüpraş'ın ana ortağıdır."},
+ "questions":[{"id":"demo-1","gold":"Koç Holding",
+  "graph":{"answer":"Koç Holding","latency_ms":1200,"citations":[{"source_id":"demo1","quote":"Koç Holding, Tüpraş'ın ana ortağıdır."}]},
+  "vector":{"answer":"Tüpraş","latency_ms":700}}]}
