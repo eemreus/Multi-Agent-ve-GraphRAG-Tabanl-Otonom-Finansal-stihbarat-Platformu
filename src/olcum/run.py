@@ -2,7 +2,8 @@
 
 Girdi (JSON): {"questions":[{"id","gold","graph":{"answer","latency_ms","citations":[{"source_id","quote"}]},
 "vector":{...aynı...}}], "sources":{"<source_id>":"<sayfa metni>"}}
-Kullanım: python -m src.olcum.run results/sonuc.json
+Kullanım: python -m src.olcum.run results/graphrag.json results/vektor.json
+(birden çok dosya id'ye göre birleştirilir; her dosya yalnızca kendi tarafını içerebilir)
 """
 from __future__ import annotations
 
@@ -23,5 +24,15 @@ def evaluate(data: dict) -> str:
     return compare_table(g_f1, v_f1, fab, p95)
 
 
+def birlestir(dosyalar: list[dict]) -> dict:
+    qs: dict = {}
+    kaynaklar: dict = {}
+    for d in dosyalar:
+        kaynaklar.update(d.get("sources", {}))
+        for q in d["questions"]:
+            qs.setdefault(q["id"], {}).update(q)
+    return {"questions": list(qs.values()), "sources": kaynaklar}
+
+
 if __name__ == "__main__":
-    print(evaluate(json.load(open(sys.argv[1], encoding="utf-8"))))
+    print(evaluate(birlestir([json.load(open(f, encoding="utf-8")) for f in sys.argv[1:]])))
