@@ -1,6 +1,6 @@
-# 11 - Teknoloji Kararları (Hafta 3, #25)
+# 12 - Teknoloji Kararları (Hafta 3, #25)
 
-Durum: **Öneri**, Emre ile birlikte onaylanacak. Hazırlayan: Sıla.
+Durum: **Onaylandı** (Sıla ve Emre). Hazırlayan: Sıla.
 
 Bu belge dört açık kararı gerekçesiyle kayda geçirir. Her karar için seçilen seçenek, neden seçildiği, elenen alternatif ve bilinen risk yazılıdır.
 
@@ -14,13 +14,14 @@ Bu belge dört açık kararı gerekçesiyle kayda geçirir. Her karar için seç
 
 **Karar:** LangGraph.
 **Gerekçe:** `docs/04-ai-pipeline.md` içindeki akış zaten bir durum makinesi. Her düğümün süresini ayrı ölçebilmek p95 gecikme hedefi (2500 ms altı) için gerekli.
-**Risk:** Öğrenme eğrisi. Önce tek düğümlü basit bir graf ile başlanır.
+**Risk:** Öğrenme eğrisi. Ayrıca yerel 8B modelle cevap üretim aşamasında p95 < 2500 ms hedefi zorlanabilir (çıkarım çevrimdışıdır, sorun değil); ölçümde ayrı raporlanır. Önce tek düğümlü basit bir graf ile başlanır.
 
 ## 2. Yerel model: Ollama üzerinden 7-8B sınıfı model
 
 **Karar:** Ollama ile çalışan `llama3.1:8b`. Türkçe çıkarım zayıf kalırsa `qwen2.5:7b` denenir.
 **Gerekçe:** Varlık-ilişki çıkarımı toplu iş (yaklaşık 297 model çağrısı) ve veri dışarı çıkmıyor. 8B model tek tüketici ekran kartında çalışır.
 **Elenen:** 13B ve üzeri modeller, ekran kartı belleğine sığmama riski.
+**Not:** Ekran kartı belleği (RTX 3060: 6 mı 12 GB mı) ilk denemede doğrulanır; 6 GB ise `llama3.2:3b` ya da API modeli yedeği kullanılır.
 **Risk:** Türkçe finansal metinde hata oranı. Çözüm: aynı 40 sayfalık test seti üzerinde iki modeli karşılaştırıp F1'e göre seçmek.
 **Açık nokta:** Emre'nin `src/graf/extractor.py` dosyasında hangi model adı kullanılıyorsa belge ona göre eşitlenecek.
 
@@ -52,5 +53,5 @@ Bu belge dört açık kararı gerekçesiyle kayda geçirir. Her karar için seç
 
 ## Onay
 
-- [ ] Sıla
-- [ ] Emre
+- [x] Sıla
+- [x] Emre
