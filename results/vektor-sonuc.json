@@ -1,0 +1,658 @@
+{
+ "sources": {},
+ "questions": [
+  {
+   "id": "S01",
+   "tur": "tek",
+   "gold": "%52,81",
+   "vector": {
+    "answer": "52,81",
+    "latency_ms": 6769.0,
+    "citations": [],
+    "retrieved": [
+     "c5da5b2cb15b",
+     "e4d6741008a8",
+     "fb538531ad46"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "S02",
+   "tur": "tek",
+   "gold": "Prof. Dr. Murat Şeker",
+   "vector": {
+    "answer": "Prof. Dr. Murat Şeker.",
+    "latency_ms": 6936.4,
+    "citations": [],
+    "retrieved": [
+     "2bff2b84d7a7",
+     "883bb8d5685e",
+     "94d6e875a469",
+     "d9e88b952fae"
+    ]
+   },
+   "kaynak_isabeti": "0/1"
+  },
+  {
+   "id": "S03",
+   "tur": "tek",
+   "gold": "300 milyon Euro (355 milyon dolar)",
+   "vector": {
+    "answer": "300 milyon Euro (355 milyon dolar)",
+    "latency_ms": 6667.2,
+    "citations": [],
+    "retrieved": [
+     "c48304ccee22",
+     "e5815a802a82"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "S04",
+   "tur": "tek",
+   "gold": "23 Temmuz 2026",
+   "vector": {
+    "answer": "23 Temmuz 2026",
+    "latency_ms": 6614.8,
+    "citations": [],
+    "retrieved": [
+     "1dd6a446e268",
+     "2f635f895533",
+     "5b4a0c0f7402",
+     "7268a3595d54"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "S05",
+   "tur": "tek",
+   "gold": "%49,12",
+   "vector": {
+    "answer": "49,12",
+    "latency_ms": 6457.1,
+    "citations": [],
+    "retrieved": [
+     "26c06085329f",
+     "b5b80b5ed8ea",
+     "c648df7cbf4a",
+     "e5815a802a82"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "S06",
+   "tur": "iki",
+   "gold": "Minnesota Üniversitesi (ABD)",
+   "vector": {
+    "answer": "Minnesota Üniversitesi.",
+    "latency_ms": 6801.3,
+    "citations": [],
+    "retrieved": [
+     "2bff2b84d7a7",
+     "763ed2845a69",
+     "7ebc9440446d",
+     "94d6e875a469"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "S07",
+   "tur": "iki",
+   "gold": "%100",
+   "vector": {
+    "answer": "Yüzde 100.",
+    "latency_ms": 6853.6,
+    "citations": [],
+    "retrieved": [
+     "50f1d1f0fa78",
+     "65a72bca07a4",
+     "c005a1af3dda"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "S08",
+   "tur": "iki",
+   "gold": "Sabancı Holding'den ayrılan Şevket Sabancı ve ailesi",
+   "vector": {
+    "answer": "Şevket Sabancı.",
+    "latency_ms": 6876.5,
+    "citations": [],
+    "retrieved": [
+     "c5da5b2cb15b",
+     "e4d6741008a8"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "S09",
+   "tur": "iki",
+   "gold": "Genel Müdür (Mali) Yardımcısı",
+   "vector": {
+    "answer": "THY Genel Müdür Yardımcısı olarak atanan Prof. Dr. Şeker finansman, hazine operasyonları, muhasebe, satın alma ve yatırımcı ilişkileri gibi kritik alanların yönetimini üstlendi.",
+    "latency_ms": 8024.3,
+    "citations": [],
+    "retrieved": [
+     "2bff2b84d7a7",
+     "7ebc9440446d",
+     "8695bb9bd8c1",
+     "94d6e875a469"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "S10",
+   "tur": "iki",
+   "gold": "154 milyon avro (yaklaşık 180 milyon dolar)",
+   "vector": {
+    "answer": "154 milyon Avro (180 milyon Dolara karşılık geliyordu)",
+    "latency_ms": 6934.0,
+    "citations": [],
+    "retrieved": [
+     "1dd6a446e268",
+     "7268a3595d54"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "S11",
+   "tur": "iki",
+   "gold": "Yaklaşık 175 uçak; 31 Mart 2026'da 129 uçak",
+   "vector": {
+    "answer": "Pegasus’un satın alma anlaşmasını açıkladığında 127 uçaktan oluşan bir filoya sahipti. Smartwings ve Çek Hava Yolları’nın toplam 47 uçaklık filosunun gruba dahil edilmesi, Pegasus’un toplam filo büyüklüğünü önemli ölçüde artıracak.",
+    "latency_ms": 8361.7,
+    "citations": [],
+    "retrieved": [
+     "5952a0e280c8",
+     "5b4a0c0f7402",
+     "7268a3595d54"
+    ]
+   },
+   "kaynak_isabeti": "2/2"
+  },
+  {
+   "id": "S12",
+   "tur": "iki",
+   "gold": "%25-27; dönüştürülebilir borç",
+   "vector": {
+    "answer": "THY, Air Europa’da yüzde 25-27 oranında pay sahibi olacak. Bu payı 300 milyon euro karşılığında alacaktır.",
+    "latency_ms": 7366.7,
+    "citations": [],
+    "retrieved": [
+     "c48304ccee22",
+     "e5815a802a82"
+    ]
+   },
+   "kaynak_isabeti": "2/2"
+  },
+  {
+   "id": "S13",
+   "tur": "iki",
+   "gold": "CEO Güliz Öztürk; 2029 yıl sonu",
+   "vector": {
+    "answer": "Pegasus Hava Yolları CEO’su Güliz Öztürk.",
+    "latency_ms": 6879.7,
+    "citations": [],
+    "retrieved": [
+     "0c7feb740221",
+     "3e62b3727902",
+     "58ad235fcf47",
+     "fbb377666d83"
+    ]
+   },
+   "kaynak_isabeti": "2/2"
+  },
+  {
+   "id": "S14",
+   "tur": "uc",
+   "gold": "Esas Holding A.Ş.; Sabancı Holding'den ayrılan Şevket Sabancı ve ailesi",
+   "vector": {
+    "answer": "Bilgi yok.",
+    "latency_ms": 6656.8,
+    "citations": [],
+    "retrieved": [
+     "50f1d1f0fa78",
+     "65a72bca07a4",
+     "c005a1af3dda",
+     "d3763b7b3a38"
+    ]
+   },
+   "kaynak_isabeti": "2/3"
+  },
+  {
+   "id": "S15",
+   "tur": "uc",
+   "gold": "Minnesota Üniversitesi (ABD)",
+   "vector": {
+    "answer": "Bilgi yok.",
+    "latency_ms": 6111.5,
+    "citations": [],
+    "retrieved": [
+     "50f1d1f0fa78",
+     "65a72bca07a4",
+     "c005a1af3dda",
+     "d3763b7b3a38"
+    ]
+   },
+   "kaynak_isabeti": "1/3"
+  },
+  {
+   "id": "S16",
+   "tur": "uc",
+   "gold": "Sabiha Gökçen ve İzmir",
+   "vector": {
+    "answer": "Sabiha Gökçen Havalimanı ve Esenboğa Havalimanı.",
+    "latency_ms": 6882.8,
+    "citations": [],
+    "retrieved": [
+     "50f1d1f0fa78",
+     "c005a1af3dda",
+     "d3763b7b3a38",
+     "e7c3b372e713"
+    ]
+   },
+   "kaynak_isabeti": "0/3"
+  },
+  {
+   "id": "S17",
+   "tur": "uc",
+   "gold": "Yönetim kurulu üyeliği; Bilal Ekşi'nin yerine",
+   "vector": {
+    "answer": "Prof. Dr. Ahmet Bolat ile Genel Müdür Bilal Ekşi'nin emeklilik kararı alarak görevlerinden ayrıldığı bildirildi.",
+    "latency_ms": 7295.8,
+    "citations": [],
+    "retrieved": [
+     "2bff2b84d7a7",
+     "7ebc9440446d",
+     "8695bb9bd8c1",
+     "94d6e875a469"
+    ]
+   },
+   "kaynak_isabeti": "2/3"
+  },
+  {
+   "id": "S18",
+   "tur": "uc",
+   "gold": "Air Europa (IAG yüzde 20 paya sahip)",
+   "vector": {
+    "answer": "Bilgi yok.",
+    "latency_ms": 6165.4,
+    "citations": [],
+    "retrieved": [
+     "14669cea9e51",
+     "36e55d1dff1e",
+     "c72981f44890"
+    ]
+   },
+   "kaynak_isabeti": "1/3"
+  },
+  {
+   "id": "S19",
+   "tur": "celiski",
+   "gold": "Evet: Dünya başlığı 114 adede çıktığını yazar, Pegasus basın bülteni ve metin toplam 150 uçak der (114 mevcut toplam, 36 yeni sipariş eklenince 150).",
+   "vector": {
+    "answer": "Pegasus’un Airbus siparişi toplamda 150 uçağı içerecek şekilde genişledi.",
+    "latency_ms": 6935.7,
+    "citations": [],
+    "retrieved": [
+     "0c7feb740221",
+     "3e62b3727902",
+     "58ad235fcf47",
+     "bbc0ab078acd"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "S20",
+   "tur": "celiski",
+   "gold": "Evet: bir köşe yazısı 104 uçak der (2023 verileri), 2026 tarihli haber 31 Mart 2026 itibarıyla 129 uçak der; fark tarih kaynaklıdır.",
+   "vector": {
+    "answer": "Pegasus’un Filosu Önemli Ölçüde Büyüyecek başlıklı parça 127 uçaktan oluşan bir filoya sahip olduğunu, diğer parça ise 104 uçak bulunan Pegasus Hava Yolları olduğunu belirtiyor.",
+    "latency_ms": 8109.8,
+    "citations": [],
+    "retrieved": [
+     "0c7feb740221",
+     "3e62b3727902",
+     "50f1d1f0fa78",
+     "7268a3595d54"
+    ]
+   },
+   "kaynak_isabeti": "2/2"
+  },
+  {
+   "id": "K01",
+   "tur": "tek",
+   "gold": "2,7 milyar dolar",
+   "vector": {
+    "answer": "2,7 milyar dolar.",
+    "latency_ms": 6597.5,
+    "citations": [],
+    "retrieved": [
+     "0900b418f7c4",
+     "2042802e7ef2",
+     "40dd479b2806",
+     "5074d360730c"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "K02",
+   "tur": "tek",
+   "gold": "Thierry Breton",
+   "vector": {
+    "answer": "Thierry Breton.",
+    "latency_ms": 6621.1,
+    "citations": [],
+    "retrieved": [
+     "4bb4fff3b9e4",
+     "90b001d90fdc",
+     "f7cceb2320af"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "K03",
+   "tur": "tek",
+   "gold": "Doğan Korkmaz",
+   "vector": {
+    "answer": "Doğan Korkmaz.",
+    "latency_ms": 9870.9,
+    "citations": [],
+    "retrieved": [
+     "44859eb3a994",
+     "6bd773c3bf30",
+     "f00ee2c03383"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "K04",
+   "tur": "tek",
+   "gold": "Murat Pınar",
+   "vector": {
+    "answer": "Murat Pınar",
+    "latency_ms": 6490.6,
+    "citations": [],
+    "retrieved": [
+     "6ace2ec4143d",
+     "c2b690412fc5",
+     "ec028c42340d"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "K05",
+   "tur": "tek",
+   "gold": "%79,44",
+   "vector": {
+    "answer": "Yüzde 79,44 seviyesine.",
+    "latency_ms": 6769.6,
+    "citations": [],
+    "retrieved": [
+     "4c8e63f0ce72",
+     "e10f02435814"
+    ]
+   },
+   "kaynak_isabeti": "1/1"
+  },
+  {
+   "id": "K06",
+   "tur": "iki",
+   "gold": "Başkan Ömer M. Koç; açılışta Yönetim Kurulu Başkan Vekili Ali Y. Koç katıldı",
+   "vector": {
+    "answer": "Koç Holding Yönetim Kurulu Başkan Vekili Ali Koç.",
+    "latency_ms": 7178.8,
+    "citations": [],
+    "retrieved": [
+     "3341de650445",
+     "7b2df4d6e25d",
+     "b6dca9ab3e2c",
+     "db57f28080b9"
+    ]
+   },
+   "kaynak_isabeti": "0/2"
+  },
+  {
+   "id": "K07",
+   "tur": "iki",
+   "gold": "121,3 milyar lira",
+   "vector": {
+    "answer": "121,3 milyar lira.",
+    "latency_ms": 7215.2,
+    "citations": [],
+    "retrieved": [
+     "0900b418f7c4",
+     "a54cbaf200f9",
+     "b3718f644954",
+     "b8072b925d22"
+    ]
+   },
+   "kaynak_isabeti": "2/2"
+  },
+  {
+   "id": "K08",
+   "tur": "iki",
+   "gold": "300 milyon dolar; 293,5 milyar lira",
+   "vector": {
+    "answer": "300 milyon dolar, 293,5 milyar lira.",
+    "latency_ms": 6786.9,
+    "citations": [],
+    "retrieved": [
+     "0900b418f7c4",
+     "2042802e7ef2",
+     "5074d360730c",
+     "601ae1322a8c"
+    ]
+   },
+   "kaynak_isabeti": "2/2"
+  },
+  {
+   "id": "K09",
+   "tur": "iki",
+   "gold": "%39,72; bilançodaki borçluluk seviyesinin düşmesine",
+   "vector": {
+    "answer": "Sabancı Holding'in Akçansa'da satışa konu olan payı yüzde 39,72.",
+    "latency_ms": 6933.2,
+    "citations": [],
+    "retrieved": [
+     "4c8e63f0ce72",
+     "e10f02435814",
+     "f0f20660c203"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "K10",
+   "tur": "iki",
+   "gold": "Enerjisa Enerji; enerji",
+   "vector": {
+    "answer": "Enerjisa Enerji’nin CEO’su olarak görev yaptı.",
+    "latency_ms": 6740.9,
+    "citations": [],
+    "retrieved": [
+     "08c98e791f21",
+     "6ace2ec4143d",
+     "c2b690412fc5",
+     "ec028c42340d"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "K11",
+   "tur": "iki",
+   "gold": "%70-80; 700 şube",
+   "vector": {
+    "answer": "Sabancı Holding’in portföyünün yaklaşık yüzde 70-80’i banka ve enerji sektörlerinde yoğunlaşmıştır.",
+    "latency_ms": 7494.1,
+    "citations": [],
+    "retrieved": [
+     "885febb5d1d6",
+     "fb6c28dd6fbb"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "K12",
+   "tur": "iki",
+   "gold": "Kıvanç Zaimler; yaklaşık 10 milyar dolara yakın",
+   "vector": {
+    "answer": "Sabancı Holding'in CEO'su Kıvanç Zaimler'dir. Son 5 senede yaklaşık 10 milyar dolar yatırım yapıldı.",
+    "latency_ms": 7238.8,
+    "citations": [],
+    "retrieved": [
+     "69f7874b474a",
+     "78a3cf2085b7",
+     "cc5f30fb0205"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "K13",
+   "tur": "uc",
+   "gold": "Tüpraş; 121,3 milyar lira",
+   "vector": {
+    "answer": "Bilgi yok.",
+    "latency_ms": 6923.9,
+    "citations": [],
+    "retrieved": [
+     "0900b418f7c4",
+     "a54cbaf200f9",
+     "b3718f644954",
+     "b8072b925d22"
+    ]
+   },
+   "kaynak_isabeti": "2/3"
+  },
+  {
+   "id": "K14",
+   "tur": "uc",
+   "gold": "Esas Holding; Pegasus (%52,81); Sabancı Holding'den ayrılan Şevket Sabancı ve ailesi",
+   "vector": {
+    "answer": "Esas Holding.",
+    "latency_ms": 6504.5,
+    "citations": [],
+    "retrieved": [
+     "3341de650445",
+     "4494032aa5ab",
+     "b6dca9ab3e2c",
+     "db57f28080b9"
+    ]
+   },
+   "kaynak_isabeti": "1/3"
+  },
+  {
+   "id": "K15",
+   "tur": "uc",
+   "gold": "Arçelik; yaklaşık 200 milyon euro yatırım; 4,6 milyar lira net dönem zararı",
+   "vector": {
+    "answer": "Arçelik'in Manisa üretim kampüsü içerisinde son 5 yılda yaptığı yaklaşık 200 milyon euro yatırımla devreye aldığı Çamaşır Makinesi İşletmesi.",
+    "latency_ms": 7583.6,
+    "citations": [],
+    "retrieved": [
+     "5074d360730c",
+     "6bd773c3bf30",
+     "f00ee2c03383"
+    ]
+   },
+   "kaynak_isabeti": "2/3"
+  },
+  {
+   "id": "K16",
+   "tur": "uc",
+   "gold": "Heidelberg Materials AG; %39,72",
+   "vector": {
+    "answer": "Heidelberg Materials AG, Sabancı Holding'in Akçansa’daki hisselerini satın alma kararı aldı. Devir işleminde Sabancı Holding’in %39,72 oranındaki payları Heidelberg Materials’a geçecek.",
+    "latency_ms": 7731.7,
+    "citations": [],
+    "retrieved": [
+     "4c8e63f0ce72"
+    ]
+   },
+   "kaynak_isabeti": "1/3"
+  },
+  {
+   "id": "K17",
+   "tur": "uc",
+   "gold": "Koç Holding; yüzde 30 azalmıştır",
+   "vector": {
+    "answer": "Koç Holding.",
+    "latency_ms": 6494.6,
+    "citations": [],
+    "retrieved": [
+     "1d4c755d8458",
+     "a54cbaf200f9",
+     "b8072b925d22"
+    ]
+   },
+   "kaynak_isabeti": "1/3"
+  },
+  {
+   "id": "K18",
+   "tur": "celiski",
+   "gold": "Evet: Mart 2026 genel kurul haberleri 16,1 milyar dolar, 9 aylık sonuç duyurusu 17,5 milyar dolar der; fark tarihten (dönem) kaynaklıdır, güncel olan 17,5.",
+   "vector": {
+    "answer": "17,5 milyar dolar.",
+    "latency_ms": 6542.0,
+    "citations": [],
+    "retrieved": [
+     "2042802e7ef2",
+     "40dd479b2806",
+     "5074d360730c",
+     "c94fb061f3ae"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "K19",
+   "tur": "celiski",
+   "gold": "Evet: Mart 2026 genel kurul haberi onu bağımsız üye olarak sayar, sonraki KAP bildirimi kendi isteğiyle ayrıldığını bildirir; güncel durum ayrılmıştır.",
+   "vector": {
+    "answer": "Koç Holding'de (KCHOL) 18 Mart 2026 tarihli olağan genel kurul toplantısında bağımsız yönetim kurulu üyesi seçilen Ömer Önhon kendi isteğiyle görevinden ayrıldı.",
+    "latency_ms": 7718.9,
+    "citations": [],
+    "retrieved": [
+     "06ac6dde21af",
+     "90b001d90fdc",
+     "f7cceb2320af"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  },
+  {
+   "id": "K20",
+   "tur": "celiski",
+   "gold": "Evet: genel kurul haberi 64,3 milyar dolar (2025 yılı), 9 aylık sonuç duyurusu 57,6 milyar dolar (2026 ocak-eylül) der; fark dönemden kaynaklıdır.",
+   "vector": {
+    "answer": "57,6 milyar dolar.",
+    "latency_ms": 6731.0,
+    "citations": [],
+    "retrieved": [
+     "0900b418f7c4",
+     "40dd479b2806",
+     "5074d360730c",
+     "fa5c04a4d089"
+    ]
+   },
+   "kaynak_isabeti": "1/2"
+  }
+ ]
+}
