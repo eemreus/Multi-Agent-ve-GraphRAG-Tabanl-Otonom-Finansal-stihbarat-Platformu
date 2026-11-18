@@ -34,7 +34,7 @@ Akış diyagramlarında hata dalları gösterilmiştir (bot engeli, zaman aşım
 
 EDA: [notebooks/eda.ipynb](../notebooks/eda.ipynb) (veri havuzu analizi, grafikler GitHub'da görünür). Ham metinler telif nedeniyle repoda yok, künyeler `data/ham/` altında.
 
-Teknoloji kararları: [12-teknoloji-kararlari.md](12-teknoloji-kararlari.md) (LangGraph, Ollama llama3.1:8b, API modeli hakem, Langfuse). Ölçüm düzeni: [11-hafta3-olcum.md](11-hafta3-olcum.md).
+Teknoloji kararları: [12-teknoloji-kararlari.md](12-teknoloji-kararlari.md) (LangGraph, Ollama llama3.1:8b, API modeli hakem, Langfuse). Ölçüm düzeni: [11-hafta3-olcum.md](11-hafta3-olcum.md). Çalıştırma rehberi (RTX 4060'lı bilgisayar): [13-calistirma-rehberi.md](13-calistirma-rehberi.md).
 
 ## İsterler ve belgeler
 

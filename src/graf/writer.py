@@ -84,3 +84,11 @@ def apply_schema(driver, path: str = "cypher/schema.cypher") -> None:
             st = "\n".join(l for l in st.splitlines() if not l.strip().startswith("//")).strip()
             if st:
                 s.run(st).consume()
+
+
+def neo4j_reader(driver):
+    """Okuma sorgusu: query(cypher, params) -> [dict]."""
+    def query(cypher: str, params: dict | None = None) -> list[dict]:
+        with driver.session() as s:
+            return [r.data() for r in s.run(cypher, **(params or {}))]
+    return query

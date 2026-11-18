@@ -227,4 +227,6 @@ data/ham/*/*.html
 data/ham/*/*.txt
 data/test_seti/sayfalar/*.html
 data/test_seti/sayfalar/*.txt
+data/cikarim/
+results/graphrag.json
 results/vektor-indeks.json
