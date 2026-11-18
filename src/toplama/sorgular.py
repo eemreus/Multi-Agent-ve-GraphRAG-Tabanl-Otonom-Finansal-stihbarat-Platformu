@@ -51,3 +51,15 @@ SIRKETLER = {
         "SAHOL hisse analist raporu",
     ],
 }
+
+# Normal sorgular hedefe yetmezse KAP bildirim sayfalarini hedefleyen yedek sorgular (#18)
+KAP_YEDEK_SORGULARI = {
+    "THYAO": ["site:kap.org.tr Türk Hava Yolları özel durum açıklaması",
+              "site:kap.org.tr THYAO yönetim kurulu", "site:kap.org.tr THYAO pay alım satım"],
+    "PGSUS": ["site:kap.org.tr Pegasus Hava Taşımacılığı özel durum açıklaması",
+              "site:kap.org.tr PGSUS yönetim kurulu", "site:kap.org.tr PGSUS pay alım satım"],
+    "KCHOL": ["site:kap.org.tr Koç Holding özel durum açıklaması",
+              "site:kap.org.tr KCHOL yönetim kurulu", "site:kap.org.tr KCHOL pay alım satım"],
+    "SAHOL": ["site:kap.org.tr Sabancı Holding özel durum açıklaması",
+              "site:kap.org.tr SAHOL yönetim kurulu", "site:kap.org.tr SAHOL pay alım satım"],
+}

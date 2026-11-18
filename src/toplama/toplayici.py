@@ -1,5 +1,6 @@
 """Veri toplama hatti: SearXNG ile ara, sayfayi cek, metni cikar, dondurulmus kopya olarak sakla."""
 import hashlib
+import os
 import json
 import time
 from datetime import datetime, timezone
@@ -17,10 +18,10 @@ MIN_METIN = 500                      # bundan kisa metin "bos sayfa" sayilir
 BOT_KODLARI = {403, 429, 503}
 BOT_IZLERI = (b"anubis", b"just a moment", b"cf-browser-verification", b"checking your browser")
 IZLEME_PARAMETRELERI = ("utm_", "srsltid", "fbclid", "gclid")
-HARIC_DESENLER = ("kap.org.tr/tr/sirket-bilgileri", "eksisozluk.com", "%e2%80", "%ef%bf%bd", "iletisim", "cagri-merkezi", "traveland.com.tr", "://x.com", "://facebook.com", "://twitter.com", "://instagram.com", "://youtube.com", "://prezi.com", "://yandex.com.tr", "tradingview.com", "sirketortagim.com", "mea-ilk-airbus", "esas.com.tr/tr/hakkimizda")   # sabit profil sayfalari, iliski/olay icermez
+HARIC_DESENLER = ("kap.org.tr/tr/sirket-bilgileri", "eksisozluk.com", "%e2%80", "%ef%bf%bd", "iletisim", "cagri-merkezi", "traveland.com.tr", "://x.com", "://facebook.com", "://twitter.com", "://instagram.com", "://youtube.com", "://prezi.com", "://yandex.com.tr", "tradingview.com", "sirketortagim.com", "bildirim-sorgu-sonuc", "/login", ".click/", ".club/", "mea-ilk-airbus", "esas.com.tr/tr/hakkimizda")   # sabit profil sayfalari, iliski/olay icermez
 MAKS_ALAN_ADI = 6                    # bir siteden sirket basina en fazla sayfa
 
-from .sorgular import SIRKETLER
+from .sorgular import KAP_YEDEK_SORGULARI, SIRKETLER
 from .kaynak_turu import tur
 
 
@@ -46,11 +47,12 @@ def ara(sorgu, adet=10):
     return [{"url": s["url"], "baslik": s.get("title", "")} for s in r.json().get("results", []) if urlparse(s["url"]).scheme in ("http", "https") and urlparse(s["url"]).netloc][:adet]
 
 
-def cek(url):
+def cek(url, proxy=None):
     """Donus: (durum, ham_icerik). durum: ok | bot_engeli | zaman_asimi | bulunamadi | hata"""
     for deneme in range(2):
         try:
-            r = requests.get(url, headers={"User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9"}, timeout=15)
+            r = requests.get(url, headers={"User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9"}, timeout=15,
+                             proxies=({"http": proxy, "https": proxy} if proxy else None))
         except requests.Timeout:
             if deneme == 0:
                 continue
@@ -116,7 +118,7 @@ def kaydet(kod, sorgu, url, orijinal_url, baslik, ham, metin_ozetleri):
     return "ok", sid
 
 
-def topla(kod, hedef=40, bekleme=1.0):
+def topla(kod, hedef=40, bekleme=1.0, sadece_yedek=False):
     sayac = {"ok": 0, "bos": 0, "ayni_icerik": 0, "bot_engeli": 0, "zaman_asimi": 0,
              "bulunamadi": 0, "hata": 0, "desteklenmeyen": 0, "tekrar": 0, "haric": 0, "alan_limiti": 0}
     klasor = HAM_KLASOR / kod
@@ -124,7 +126,8 @@ def topla(kod, hedef=40, bekleme=1.0):
     gorulen, metin_ozetleri, alanlar = _mevcut(klasor)
     kayitli = len(gorulen)
     _global_yukle(gorulen, metin_ozetleri)
-    for sorgu in SIRKETLER[kod]:
+    sorgular = KAP_YEDEK_SORGULARI[kod] if sadece_yedek else SIRKETLER[kod] + KAP_YEDEK_SORGULARI[kod]
+    for sorgu in sorgular:
         if kayitli >= hedef:
             break
         try:
@@ -147,7 +150,7 @@ def topla(kod, hedef=40, bekleme=1.0):
                 sayac["alan_limiti"] += 1
                 continue
             gorulen.add(n)
-            durum, ham = cek(n)
+            durum, ham = cek_yedekli(n)
             if durum != "ok":
                 sayac[durum] += 1
                 continue
@@ -178,3 +181,19 @@ def _global_yukle(gorulen, metin_ozetleri):
         for satir in kl.read_text(encoding="utf-8-sig").splitlines():
             if satir.strip():
                 gorulen.add(normalize_url(satir.strip()))
+
+# --- Proxy yedegi (#18): liste PROXY_LISTESI ortam degiskeninden okunur, virgulle ayrilir ---
+PROXYLER = [p.strip() for p in os.environ.get("PROXY_LISTESI", "").split(",") if p.strip()]
+MAKS_PROXY_DENEME = 3
+
+
+def cek_yedekli(url):
+    """Once dogrudan dener. Bot engelinde PROXY_LISTESI'ndeki proxy'lerle (en fazla 3) tekrar dener."""
+    durum, ham = cek(url)
+    if durum == "bot_engeli":
+        for proxy in PROXYLER[:MAKS_PROXY_DENEME]:
+            print(f"    [proxy] {url[:60]} -> deneniyor")
+            durum, ham = cek(url, proxy=proxy)
+            if durum == "ok":
+                break
+    return durum, ham
