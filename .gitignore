@@ -221,3 +221,7 @@ __marimo__/
 .env
 __pycache__/
 .pytest_cache/
+
+# Telifli ham sayfa icerikleri repoya girmez, sadece kunye (.json) girer
+data/ham/*/*.html
+data/ham/*/*.txt
