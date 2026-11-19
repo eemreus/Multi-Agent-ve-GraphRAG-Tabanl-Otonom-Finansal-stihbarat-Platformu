@@ -18,10 +18,45 @@ python -m src.olcum.run results/sonuc.json
 
 Girdi biçimi `src/olcum/run.py` içinde belgeli. `results/ornek-sonuc.json` yalnızca biçimi göstermek için uydurulmuş tek satırlık örnektir, gerçek sonuç değildir.
 
-## Sonuç tablosu
+## Çalıştırma günlüğü (GraphRAG, 40 soru, F1 vektör RAG = 0,509)
+
+| Tur | Değişiklik | GraphRAG F1 | Not |
+|---|---|---|---|
+| 1 | Yalnızca graftaki ilişki cümleleri modele verildi | 0,035 | Soruların çoğu rakam/tarih/tutar soruyor, bunlar ilişki olarak grafa girmiyor; model "Kanıt yok" dedi |
+| 2 | Graf, varlıkların sayfalarını bulur; sayfalardan soruyla örtüşen 6 parça modele verilir | 0,315 | Türlere göre: tek 0,531, iki 0,304, üç 0,206, çelişki 0,137. Atıfı doğru sayfayı içeren soru 12/40: aday sayfa seçimi sınırlıydı (6 sayfa) |
+| 3 | Aday sayfa sınırı 6 → 16 | **0,443** | Türlere göre: tek 0,824, iki 0,461, üç 0,196, çelişki 0,123. "Kanıt yok" diyen 5 soru, doğru sayfa atıfta 14/40 |
+
+## Sonuç tablosu (3. tur, 40 soru, 159 sayfalık havuz)
 
 | Metrik | Ölçülen | Hedef | Durum |
 |---|---|---|---|
-| F1 kazancı | henüz ölçülmedi | ≥ +%20 | bekliyor |
-| Uydurma atıf oranı | henüz ölçülmedi | < %5 | bekliyor |
-| p@95 gecikme | henüz ölçülmedi | < 2500 ms | bekliyor |
+| F1 kazancı (GraphRAG vs vektör RAG) | -%13,0 (GraphRAG 0,443, vektör 0,509) | ≥ +%20 | Karşılanmadı |
+| Uydurma atıf oranı (GraphRAG) | %0 | < %5 | Karşılandı |
+| p@95 gecikme (GraphRAG) | 27,4 sn (ortanca 16,6 sn; vektör RAG p95 8,1 sn) | < 2,5 sn | Karşılanmadı |
+
+### Türlere göre F1
+
+| Tür | Soru | GraphRAG | Vektör RAG |
+|---|---|---|---|
+| Tek adım | 10 | 0,824 | 0,967 |
+| İki adım | 15 | 0,461 | 0,486 |
+| Üç adım | 10 | 0,196 | 0,232 |
+| Çelişki | 5 | 0,123 | 0,219 |
+| Tümü | 40 | 0,443 | 0,509 |
+
+Soru bazında puanlar: `results/puanlar.csv`.
+
+## Değerlendirme
+
+Hedeflerden yalnızca uydurma atıf oranı karşılandı. GraphRAG'in vektör RAG'e kazancı beklenen +%20 yerine -%13 çıktı.
+
+**Gözlemler**
+1. Tek turda 0,035'ten 0,443'e çıkış, grafın tek başına yetmediğini gösterdi: soruların çoğu rakam, tarih, tutar istiyor ve bunlar ilişki olarak grafa girmiyor. Graf bir dizin olarak (hangi sayfalara bakılacak) kullanıldığında sonuç yükseldi.
+2. Doğru kanıt sayfası GraphRAG'in atıflarında yalnızca 14/40 soruda görünüyor. Darboğaz cevap üretimi değil, graftan doğru sayfaya ulaşmak. Yerel 8B modelin sayfa başına yaklaşık 5 ilişki çıkarması bazı sayfaları grafta görünmez bırakıyor.
+3. Çok adımlı (üç adım ve çelişki) sorularda her iki sistem de zayıf; GraphRAG'in beklenen üstünlüğü bu türlerde ortaya çıkmadı. Kelime düzeyinde F1 uzun, çok parçalı cevapları cezalandırdığı için mutlak değerler düşük kalıyor.
+4. Gecikme hedefi 8B yerel modelle gerçekçi değildi. Her soruda iki model çağrısı yapılıyor (sorudaki varlıkları bulma, cevap üretme).
+
+**Sonraki adımlar (Hafta 4)**
+- Hibrit erişim: graf ile bulunan sayfalara ek olarak vektör araması sonuçlarını birleştirmek.
+- Çıkarım kalitesini artırmak (daha güçlü model ya da API modeli ile ilişki çıkarımı), böylece grafın sayfa kapsamı genişler.
+- Varlık bulma çağrısını modelsiz yapıp gecikmeyi düşürmek.
