@@ -119,7 +119,7 @@ def iliski_sirala(satirlar: list[dict], soru: str, n: int = 10) -> list[dict]:
     return sorted(satirlar, key=skor, reverse=True)[:n]
 
 
-def sayfa_adaylari(query: Callable, ids: list[str], maks: int = 6) -> list[str]:
+def sayfa_adaylari(query: Callable, ids: list[str], maks: int = 16) -> list[str]:
     """Bağlanan varlıkların kendi sayfaları (ağırlık 10) ve 2 adım komşularının sayfaları."""
     agirlik: dict[str, float] = {}
     for i in ids:

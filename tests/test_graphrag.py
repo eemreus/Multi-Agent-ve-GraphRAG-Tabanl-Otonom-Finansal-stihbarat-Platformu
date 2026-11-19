@@ -80,3 +80,11 @@ def test_iliski_sirala_ilgiliyi_one_alir():
     a = {**SATIR, "evidence": "Hiç ilgisiz cümle burada.", "bas": "X", "son": "Y", "conf": 0.99}
     b = {**SATIR, "evidence": "Tüpraş hissesinin yüzde 51'i Koç Holding'e aittir."}
     assert iliski_sirala([a, b], "Tüpraş hissesi yüzde kaç?", n=1)[0] is b
+
+
+def test_sayfa_adaylari_esit_agirlikta_hepsini_alir():
+    from src.graphrag.pipeline import sayfa_adaylari
+
+    def q(cypher, params=None):
+        return [{"sid": f"p{i}", "w": 10} for i in range(12)] if "RETURN sid, 10" in cypher else []
+    assert len(sayfa_adaylari(q, ["x"])) == 12  # eşit ağırlıklı tohum sayfaları kırpılmaz
