@@ -39,15 +39,20 @@ def cikar(kunye: Path, generate, model: str) -> Extraction | None:
     if not txt.exists():
         print(f"[ATLANDI] ham metin yok: {sid}", file=sys.stderr)
         return None
-    toplam, hata = Extraction(), 0
+    toplam, hata, atilan, atilan_kanit = Extraction(), 0, 0, 0
     for res in extract_document(txt.read_text(encoding="utf-8"), generate):
         if res.failed:
             hata += 1
+            print(f"[UYARI] {sid}: parça işlenemedi: {res.error}", file=sys.stderr)
             continue
+        atilan += len(res.notlar)
+        atilan_kanit += len(res.dropped)
         toplam.entities += res.extraction.entities
         toplam.relations += res.extraction.relations
+    if atilan or atilan_kanit:
+        print(f"[BİLGİ] {sid}: {atilan} geçersiz öğe, {atilan_kanit} kanıtsız ilişki atıldı", file=sys.stderr)
     if hata:
-        print(f"[UYARI] {sid}: {hata} parça işlenemedi", file=sys.stderr)
+        return toplam  # eksik sonucu önbelleğe alma: yeniden çalıştırınca tekrar denensin
     ONBELLEK.mkdir(parents=True, exist_ok=True)
     onbellek.write_text(toplam.model_dump_json(indent=1), encoding="utf-8")
     return toplam

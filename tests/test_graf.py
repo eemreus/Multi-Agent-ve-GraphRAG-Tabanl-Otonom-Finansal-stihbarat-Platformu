@@ -87,3 +87,47 @@ def test_writer_retries_then_raises():
     with pytest.raises(RuntimeError):
         write_extraction(boom, Extraction.model_validate(GOOD), "s", "m", sleep=lambda s: None)
     assert n["c"] == 3
+
+
+def test_lenient_keeps_valid_drops_invalid():
+    from src.graf.extractor import parse_lenient
+    data = {"entities": [{"label": "company", "name": "Koç Holding", "ticker": None},
+                         {"label": "Person", "name": "Ahmet Bolat", "aliases": None},
+                         {"label": "Banana", "name": "Hatalı"}],
+            "relations": [{"type": "board_member_of", "source": "ahmet bolat", "target": "Koç Holding",
+                           "evidence": "Ahmet Bolat yönetim kurulunda.", "confidence": "0.8", "props": {"x": {"a": 1}}},
+                          {"type": "INVESTED_IN", "source": "Koç Holding", "target": "Yok",
+                           "evidence": "geçersiz ilişki", "confidence": 0.5}]}
+    ext, notlar = parse_lenient(data)
+    assert [e.name for e in ext.entities] == ["Koç Holding", "Ahmet Bolat"]
+    assert len(ext.relations) == 1 and ext.relations[0].type == "BOARD_MEMBER_OF" and ext.relations[0].confidence == 0.8
+    assert ext.relations[0].props == {} and len(notlar) == 2
+
+
+def test_extract_survives_partially_invalid():
+    bad = json.loads(json.dumps(GOOD))
+    bad["relations"].append({"type": "X", "source": "a", "target": "b", "evidence": "xxxxxx", "confidence": 1})
+    r = extract_chunk(TEXT, lambda p: json.dumps(bad))
+    assert not r.failed and len(r.extraction.relations) == 1 and r.notlar
+
+
+def test_evidence_curly_quotes():
+    assert evidence_in_text("Koç’un payı", "Koç'un payı yüzde 5")
+
+
+def test_salvage_truncated_json():
+    from src.graf.extractor import salvage_json
+    kesik = '{"entities":[{"label":"Company","name":"Koç Holding"}],"relations":[{"type":"PARTNER_OF","source":"a","tar'
+    d = salvage_json(kesik)
+    assert d["entities"][0]["name"] == "Koç Holding"
+
+
+def test_timeout_does_not_crash():
+    import requests
+    n = {"c": 0}
+
+    def gen(p):
+        n["c"] += 1
+        raise requests.exceptions.ReadTimeout("t")
+    r = extract_chunk(TEXT, gen)
+    assert r.failed and n["c"] == 3 and "zaman aşımı" in r.error

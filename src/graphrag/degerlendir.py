@@ -23,10 +23,21 @@ def kaynak_metinleri() -> dict[str, str]:
     return {p["id"]: next(Path("data/ham").glob(f"*/{p['id']}.txt")).read_text(encoding="utf-8") for p in manifest}
 
 
-def calistir(query, generate, qs: list[dict]) -> dict:
+def sayfa_okuyucu():
+    onbellek: dict = {}
+
+    def oku(sid: str):
+        if sid not in onbellek:
+            f = next(Path("data/ham").glob(f"*/{sid}.txt"), None)
+            onbellek[sid] = f.read_text(encoding="utf-8") if f else None
+        return onbellek[sid]
+    return oku
+
+
+def calistir(query, generate, qs: list[dict], sayfa_metni=None) -> dict:
     sonuc = []
     for r in qs:
-        s = cevapla(query, r["soru"], generate)
+        s = cevapla(query, r["soru"], generate, sayfa_metni)
         sonuc.append({"id": r["no"], "tur": r["tur"], "gold": r["cevap"],
                       "graph": {"answer": s.cevap, "latency_ms": s.gecikme_ms, "citations": s.atiflar,
                                 "kanit_sayisi": s.kanit_sayisi, "atilan_atif": s.atilan_atif}})
@@ -39,7 +50,7 @@ def main(argv=None) -> int:
     gen = lambda p: ollama_generate(p, model, os.getenv("OLLAMA_URL", "http://localhost:11434"))
     _, driver = neo4j_runner(os.getenv("NEO4J_URI", "bolt://localhost:7687"), os.getenv("NEO4J_USER", "neo4j"),
                              os.getenv("NEO4J_PASSWORD", "paragoz-dev-sifre"))
-    out = calistir(neo4j_reader(driver), gen, sorular()[: a.limit])
+    out = calistir(neo4j_reader(driver), gen, sorular()[: a.limit], sayfa_okuyucu())
     out["sources"] = kaynak_metinleri()
     Path("results").mkdir(exist_ok=True)
     Path("results/graphrag.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
