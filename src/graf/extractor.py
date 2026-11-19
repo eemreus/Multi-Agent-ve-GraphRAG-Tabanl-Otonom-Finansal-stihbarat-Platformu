@@ -129,7 +129,7 @@ def ollama_generate(prompt: str, model: str = "llama3.1:8b", url: str = "http://
     r = requests.post(
         f"{url}/api/generate",
         json={"model": model, "prompt": prompt, "stream": False, "format": "json",
-              "options": {"temperature": 0, "num_predict": 1500, "num_ctx": 4096, "repeat_penalty": 1.1}},
+              "options": {"temperature": 0, "num_predict": 1500, "num_ctx": 8192, "repeat_penalty": 1.1}},
         timeout=240,
     )
     r.raise_for_status()
