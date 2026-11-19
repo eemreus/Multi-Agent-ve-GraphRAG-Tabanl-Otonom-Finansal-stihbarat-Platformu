@@ -36,6 +36,8 @@ EDA: [notebooks/eda.ipynb](../notebooks/eda.ipynb) (veri havuzu analizi, grafikl
 
 Teknoloji kararları: [12-teknoloji-kararlari.md](12-teknoloji-kararlari.md) (LangGraph, Ollama llama3.1:8b, API modeli hakem, Langfuse). Ölçüm düzeni: [11-hafta3-olcum.md](11-hafta3-olcum.md). Çalıştırma rehberi (RTX 4060'lı bilgisayar): [13-calistirma-rehberi.md](13-calistirma-rehberi.md).
 
+Demo (#26): [5 dk sunum](sunum/ParaGoz-Hafta3-Demo.pdf) ([PowerPoint](sunum/ParaGoz-Hafta3-Demo.pptx), konuşma notları dosyanın içinde) ve [canlı demo akışı](14-demo-akisi.md).
+
 ## İsterler ve belgeler
 
 | İster | GitHub Issue | İlgili belgeler |

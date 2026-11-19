@@ -88,3 +88,15 @@ def test_sayfa_adaylari_esit_agirlikta_hepsini_alir():
     def q(cypher, params=None):
         return [{"sid": f"p{i}", "w": 10} for i in range(12)] if "RETURN sid, 10" in cypher else []
     assert len(sayfa_adaylari(q, ["x"])) == 12  # eşit ağırlıklı tohum sayfaları kırpılmaz
+
+
+def test_demo_soru_metni():
+    from src.graphrag.sor import soru_metni
+    liste = [{"no": "K10", "soru": "Örnek soru?"}]
+    assert soru_metni(None, "K10", liste) == "Örnek soru?"
+    assert soru_metni("Serbest soru", None, liste) == "Serbest soru"
+    import pytest
+    with pytest.raises(SystemExit):
+        soru_metni(None, "X99", liste)
+    with pytest.raises(SystemExit):
+        soru_metni(None, None, liste)
