@@ -85,3 +85,6 @@ istemci --X-API-Key--> gateway (:8000) --X-Internal-Token--> graphrag-agent (:80
 - Docker ile hepsi: `docker compose up -d --build` (Ollama ana makinede açık olmalı; ajan ona `host.docker.internal` ile ulaşır).
 - Elle: `uvicorn src.agent.main:app --port 8001` ve `$env:AGENT_URL="http://127.0.0.1:8001"; uvicorn src.api.main:app`.
 - `data/` klasörü imaja kopyalanmaz, ajana salt okunur bağlanır.
+
+## Token telemetrisi
+Her model çağrısının `prompt_eval_count` (girdi) ve `eval_count` (çıktı) değerleri toplanıp `agent_logs.tokens_in/tokens_out` alanlarına yazılır. Önbellekten gelen cevapta model çağrılmadığı için token yazılmaz. Rapor: `python -m src.api.telemetri` toplam girdi/çıktı tokenını da verir.

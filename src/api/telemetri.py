@@ -25,7 +25,8 @@ RAPOR = ("SELECT count(*) FILTER (WHERE event_type = 'sor' AND error_code IS NUL
          "percentile_cont(0.50) WITHIN GROUP (ORDER BY latency_ms) "
          "FILTER (WHERE event_type = 'sor' AND error_code IS NULL) AS p50_ms, "
          "percentile_cont(0.95) WITHIN GROUP (ORDER BY latency_ms) "
-         "FILTER (WHERE event_type = 'sor' AND error_code IS NULL) AS p95_ms "
+         "FILTER (WHERE event_type = 'sor' AND error_code IS NULL) AS p95_ms, "
+         "coalesce(sum(tokens_in), 0) AS toplam_girdi_token, coalesce(sum(tokens_out), 0) AS toplam_cikti_token "
          "FROM agent_logs WHERE agent_name = 'graphrag' AND created_at >= now() - make_interval(hours => :saat)")
 
 
@@ -90,6 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     r = rapor(Postgres(url).sorgula, a.saat)
     print(json.dumps(r, ensure_ascii=False, indent=2))
     p95 = r.get("p95_ms")
+    print(f"token: {r.get('toplam_girdi_token', 0)} girdi, {r.get('toplam_cikti_token', 0)} çıktı")
     if p95 is not None:
         print(f"p95 = {p95} ms (hedef 2500 ms): {'hedefte' if p95 < 2500 else 'hedefin üstünde'}")
     return 0
