@@ -24,7 +24,43 @@ uvicorn src.api.main:app --reload
 - `422`: soru 3-500 karakter dışında
 - `429`: dakikadaki istek sınırı aşıldı (`Retry-After` başlığı bekleme süresini verir)
 
-## Sonraki adımlar (Sıla)
-- `SorServisi(telemetri=...)`: her isteğin gecikmesini PostgreSQL `agent_logs` tablosuna yaz (p95 ölçümü)
-- Redis cache: aynı soruyu tekrar modele göndermemek için `SorServisi` önüne
+## Telemetri ve önbellek (Hafta 4)
+
+| Dosya | İş |
+|---|---|
+| `telemetri.py` | Her isteğin gecikmesini PostgreSQL `agent_logs` tablosuna yazar; `python -m src.api.telemetri` p50/p95 raporu verir |
+| `onbellek.py` | Aynı soru için önbellek: Redis (`REDIS_URL`) ya da bellek; Redis kapalıysa sessizce devre dışı kalır |
+
+Ortam değişkenleri (ikisi de isteğe bağlı; tanımlı değilse ilgili özellik kapalı kalır):
+
+| Değişken | Etkisi |
+|---|---|
+| `DATABASE_URL` | Tanımlıysa her istek `agent_logs`'a yazılır |
+| `REDIS_URL` | Tanımlıysa cevaplar Redis'te saklanır (`REDIS_TTL_SN`, varsayılan 3600 sn) |
+
+```powershell
+docker compose up -d postgres redis
+alembic upgrade head
+$env:DATABASE_URL = "postgresql+psycopg://paragoz:paragoz-dev-sifre@localhost:5432/paragoz"
+$env:REDIS_URL = "redis://localhost:6379/0"
+$env:API_KEYS = "gelistirme-anahtari"
+uvicorn src.api.main:app --reload
+```
+
+Kayıtları görmek ve p95'i okumak için:
+
+```powershell
+docker exec -it paragoz-postgres psql -U paragoz -d paragoz -c "SELECT event_type, latency_ms, error_code, created_at FROM agent_logs ORDER BY created_at DESC LIMIT 5"
+python -m src.api.telemetri --saat 24
+```
+
+Kurallar:
+- `event_type = 'sor'` modele giden istektir, `sor_onbellek` önbellek isabetidir. **p95 yalnızca `sor` kayıtlarından hesaplanır**; hızlı önbellek cevapları gecikme hedefini olduğundan iyi göstermesin diye ayrı sayılır.
+- Yanıttaki `onbellek` alanı cevabın önbellekten gelip gelmediğini söyler.
+- Ham soru loga yazılmaz, yalnızca kısa bir özet (`payload.soru_ozeti`) tutulur.
+- Hatalı cevaplar önbelleğe girmez. Önbellek anahtarı modeli içerir; `OLLAMA_MODEL` değişince eski cevaplar kullanılmaz. Graf ya da istem değişirse Redis'i temizle: `docker exec paragoz-redis redis-cli FLUSHDB`.
+- Telemetri ya da Redis çökse bile kullanıcı cevabını alır (hata loglanır).
+
+## Sonraki adımlar
 - Anahtarları `api_keys` tablosundan okumak (şimdilik `API_KEYS` ortam değişkeni)
+- `/sor` isteğine `derinlik` alanı eklemek (`pipeline.derinlik_sinirla` hazır, 1-3)
