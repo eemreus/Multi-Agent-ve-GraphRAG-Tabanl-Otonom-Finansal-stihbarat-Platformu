@@ -28,6 +28,7 @@ class Yanit(BaseModel):
     atilan_atif: int = Field(description="Kaynakta doğrulanamayıp elenen atıf sayısı")
     kanit_sayisi: int
     gecikme_ms: int
+    onbellek: bool = Field(default=False, description="Cevap önbellekten geldiyse true (model çağrılmadı)")
 
 
 def varsayilan_servis() -> SorServisi:
@@ -42,7 +43,13 @@ def varsayilan_servis() -> SorServisi:
     _, driver = neo4j_runner(os.getenv("NEO4J_URI", "bolt://localhost:7687"), os.getenv("NEO4J_USER", "neo4j"),
                              os.getenv("NEO4J_PASSWORD", "paragoz-dev-sifre"))
     okuyucu, sayfa = neo4j_reader(driver), sayfa_okuyucu()
-    return SorServisi(lambda soru: cevapla(okuyucu, soru, lambda p: ollama_generate(p, model, url), sayfa))
+    from .onbellek import ortamdan as onbellek_ortamdan
+    from .telemetri import ortamdan as telemetri_ortamdan
+
+    return SorServisi(lambda soru: cevapla(okuyucu, soru, lambda p: ollama_generate(p, model, url), sayfa),
+                      telemetri=telemetri_ortamdan(),   # DATABASE_URL varsa agent_logs'a yazar
+                      onbellek=onbellek_ortamdan(),     # REDIS_URL varsa Redis önbelleği
+                      surum=f"{model}:v1")
 
 
 def uygulama_olustur(servis: SorServisi | None = None, anahtarlar: ApiAnahtarlari | None = None,

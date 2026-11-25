@@ -4,6 +4,8 @@ from __future__ import annotations
 import time
 from typing import Callable
 
+from .onbellek import onbellek_anahtari
+
 MIN_SORU, MAKS_SORU = 3, 500
 
 
@@ -19,16 +21,30 @@ def soru_temizle(metin: str | None) -> str:
 
 
 class SorServisi:
-    """cevapla_fn(soru) -> src.graphrag.pipeline.Sonuc. telemetri(olay) her istek için çağrılır
-    (Sıla: agent_logs tablosuna yazan fonksiyon buraya bağlanacak)."""
+    """cevapla_fn(soru) -> src.graphrag.pipeline.Sonuc.
+    telemetri(olay): her istek için çağrılır (src.api.telemetri.AgentLogYazici agent_logs'a yazar).
+    onbellek: get(anahtar)/set(anahtar, deger) arayüzlü nesne (src.api.onbellek). `surum` değişince
+    (model, istem ya da graf güncellenince) eski cevaplar kullanılmaz."""
 
-    def __init__(self, cevapla_fn: Callable, telemetri: Callable[[dict], None] | None = None):
+    def __init__(self, cevapla_fn: Callable, telemetri: Callable[[dict], None] | None = None,
+                 onbellek=None, surum: str = "v1"):
         self.cevapla_fn = cevapla_fn
         self.telemetri = telemetri or (lambda olay: None)
+        self.onbellek = onbellek
+        self.surum = surum
 
     def sor(self, metin: str) -> dict:
         soru = soru_temizle(metin)
+        anahtar = onbellek_anahtari(soru, self.surum)
+        ozet = {"soru_ozeti": anahtar[:12]}  # ham soru loga yazılmaz
         t0 = time.perf_counter()
+        if self.onbellek is not None:
+            kayit = self.onbellek.get(anahtar)
+            if kayit is not None:
+                gecikme = int((time.perf_counter() - t0) * 1000)
+                self.telemetri({"agent_name": "graphrag", "event_type": "sor_onbellek", "latency_ms": gecikme,
+                                "error_code": None, "payload": ozet})
+                return {**kayit, "gecikme_ms": gecikme, "onbellek": True}
         hata = None
         try:
             s = self.cevapla_fn(soru)
@@ -40,6 +56,7 @@ class SorServisi:
         finally:
             gecikme = int((time.perf_counter() - t0) * 1000)
             self.telemetri({"agent_name": "graphrag", "event_type": "sor", "latency_ms": gecikme,
-                            "error_code": hata})
-        yanit["gecikme_ms"] = gecikme
-        return yanit
+                            "error_code": hata, "payload": ozet})
+        if self.onbellek is not None:
+            self.onbellek.set(anahtar, yanit)  # yalnızca başarılı cevap; hata yukarıda raise ile çıktı
+        return {**yanit, "gecikme_ms": gecikme, "onbellek": False}
