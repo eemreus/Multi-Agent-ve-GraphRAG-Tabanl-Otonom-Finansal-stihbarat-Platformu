@@ -45,9 +45,10 @@ class SorServisi:
                 self.telemetri({"agent_name": "graphrag", "event_type": "sor_onbellek", "latency_ms": gecikme,
                                 "error_code": None, "payload": ozet})
                 return {**kayit, "gecikme_ms": gecikme, "onbellek": True}
-        hata = None
+        hata, tokenlar = None, (None, None)
         try:
             s = self.cevapla_fn(soru)
+            tokenlar = (getattr(s, "tokens_in", None), getattr(s, "tokens_out", None))
             yanit = {"cevap": s.cevap, "atiflar": s.atiflar, "atilan_atif": s.atilan_atif,
                      "kanit_sayisi": s.kanit_sayisi}
         except Exception as e:  # model ya da graf hatası kullanıcıya ham gitmez
@@ -56,6 +57,7 @@ class SorServisi:
         finally:
             gecikme = int((time.perf_counter() - t0) * 1000)
             self.telemetri({"agent_name": "graphrag", "event_type": "sor", "latency_ms": gecikme,
+                            "tokens_in": tokenlar[0], "tokens_out": tokenlar[1],
                             "error_code": hata, "payload": ozet})
         # Yalnızca kanıtlı cevap saklanır: hata yukarıda raise ile çıktı; atıfsız ya da "Kanıt yok"
         # cevabı saklamak kötü sonucu önbellek süresince (1 saat) tekrarlatırdı.

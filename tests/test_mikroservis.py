@@ -19,10 +19,12 @@ def test_istemci_sonuca_cevirir_ve_token_gonderir():
         gorulen["token"] = istek.headers["x-internal-token"]
         gorulen["yol"] = istek.url.path
         return httpx.Response(200, json={"cevap": "Enerjisa", "atiflar": [{"source_id": "s1", "quote": "alıntı"}],
-                                         "atilan_atif": 1, "kanit_sayisi": 4, "gecikme_ms": 12.5})
+                                         "atilan_atif": 1, "kanit_sayisi": 4, "gecikme_ms": 12.5,
+                                         "tokens_in": 900, "tokens_out": 60})
     s = istemci(isleyici)("Enerjisa'nın sahibi kim?")
     assert isinstance(s, Sonuc) and s.cevap == "Enerjisa" and s.atilan_atif == 1 and s.kanit_sayisi == 4
     assert s.atiflar == [{"source_id": "s1", "quote": "alıntı"}]
+    assert (s.tokens_in, s.tokens_out) == (900, 60)
     assert gorulen == {"token": "gizli", "yol": "/cevapla"}
 
 

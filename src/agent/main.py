@@ -20,6 +20,8 @@ class AjanYaniti(BaseModel):
     atilan_atif: int
     kanit_sayisi: int
     gecikme_ms: float
+    tokens_in: int = 0
+    tokens_out: int = 0
 
 
 def uygulama_olustur(cevapla_fn: Callable | None = None, token: str | None = None) -> FastAPI:
@@ -44,7 +46,8 @@ def uygulama_olustur(cevapla_fn: Callable | None = None, token: str | None = Non
             durum["fn"] = gercek_cevapla()
         s = durum["fn"](istek.soru)
         return AjanYaniti(cevap=s.cevap, atiflar=s.atiflar, atilan_atif=s.atilan_atif,
-                          kanit_sayisi=s.kanit_sayisi, gecikme_ms=s.gecikme_ms)
+                          kanit_sayisi=s.kanit_sayisi, gecikme_ms=s.gecikme_ms,
+                          tokens_in=s.tokens_in, tokens_out=s.tokens_out)
 
     return app
 

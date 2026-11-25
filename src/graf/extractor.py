@@ -126,6 +126,12 @@ def evidence_in_text(evidence: str, text: str) -> bool:
 
 
 def ollama_generate(prompt: str, model: str = "llama3.1:8b", url: str = "http://localhost:11434") -> str:
+    return ollama_generate_ayrintili(prompt, model, url)[0]
+
+
+def ollama_generate_ayrintili(prompt: str, model: str = "llama3.1:8b",
+                              url: str = "http://localhost:11434") -> tuple[str, int, int]:
+    """(cevap, girdi tokenı, çıktı tokenı). Token sayıları Ollama yanıtındaki prompt_eval_count ve eval_count."""
     r = requests.post(
         f"{url}/api/generate",
         json={"model": model, "prompt": prompt, "stream": False, "format": "json",
@@ -133,7 +139,8 @@ def ollama_generate(prompt: str, model: str = "llama3.1:8b", url: str = "http://
         timeout=240,
     )
     r.raise_for_status()
-    return r.json()["response"]
+    d = r.json()
+    return d["response"], int(d.get("prompt_eval_count") or 0), int(d.get("eval_count") or 0)
 
 
 @dataclass

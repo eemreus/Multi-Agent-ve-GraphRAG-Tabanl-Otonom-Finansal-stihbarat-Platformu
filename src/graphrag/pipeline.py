@@ -72,6 +72,8 @@ class Sonuc:
     kanit_sayisi: int = 0
     gorunen_varliklar: list[str] = field(default_factory=list)
     atilan_atif: int = 0
+    tokens_in: int = 0
+    tokens_out: int = 0
 
 
 def _json(raw: str) -> dict:

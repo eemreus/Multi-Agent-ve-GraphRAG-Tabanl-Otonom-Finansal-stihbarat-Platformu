@@ -175,3 +175,36 @@ def test_atifsiz_ya_da_kanit_yok_cevabi_onbellege_girmez():
     s = SorServisi(fn, onbellek=BellekOnbellek())
     s.sor("geçerli bir soru"); s.sor("geçerli bir soru"); s.sor("geçerli bir soru")
     assert len(cagri) == 3                     # üçü de modele gitti, kötü cevap saklanmadı
+
+
+def test_token_sayilari_telemetriye_yazilir():
+    olaylar = []
+    s = SorServisi(lambda q: Sonuc("c", [{"source_id": "s", "quote": "q"}], 1.0, 1, [], 0, 1200, 85), telemetri=olaylar.append)
+    s.sor("geçerli bir soru")
+    assert olaylar[0]["tokens_in"] == 1200 and olaylar[0]["tokens_out"] == 85
+
+
+def test_hata_olunca_token_bos_kalir():
+    olaylar = []
+
+    def fn(q):
+        raise RuntimeError("model yok")
+    with pytest.raises(RuntimeError):
+        SorServisi(fn, telemetri=olaylar.append).sor("geçerli bir soru")
+    assert olaylar[0]["tokens_in"] is None and olaylar[0]["tokens_out"] is None
+
+
+def test_ollama_token_sayilarini_yanittan_okur(monkeypatch):
+    from src.graf import extractor
+
+    class Yanit:
+        def raise_for_status(self): pass
+        def json(self): return {"response": "{}", "prompt_eval_count": 321, "eval_count": 45}
+    monkeypatch.setattr(extractor.requests, "post", lambda *a, **k: Yanit())
+    assert extractor.ollama_generate_ayrintili("x") == ("{}", 321, 45)
+    assert extractor.ollama_generate("x") == "{}"          # eski çağrı biçimi bozulmadı
+
+
+def test_rapor_token_toplami_sorguda():
+    from src.api.telemetri import RAPOR
+    assert "sum(tokens_in)" in RAPOR and "sum(tokens_out)" in RAPOR

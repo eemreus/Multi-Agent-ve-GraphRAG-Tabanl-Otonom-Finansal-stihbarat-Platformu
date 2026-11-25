@@ -31,7 +31,8 @@ class AjanIstemcisi:
         if r.status_code != 200:
             raise AjanHatasi(f"Ajan servisi {r.status_code} döndürdü.")
         d = r.json()
-        return Sonuc(d["cevap"], d["atiflar"], d["gecikme_ms"], d["kanit_sayisi"], [], d["atilan_atif"])
+        return Sonuc(d["cevap"], d["atiflar"], d["gecikme_ms"], d["kanit_sayisi"], [], d["atilan_atif"],
+                     d.get("tokens_in", 0), d.get("tokens_out", 0))
 
     @classmethod
     def ortamdan(cls) -> "AjanIstemcisi | None":
