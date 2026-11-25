@@ -132,6 +132,22 @@ def _ws(x: str) -> str:
     return re.sub(r"\s+", " ", x.replace("’", "'")).strip().lower()
 
 
+def _duz(x: str) -> str:
+    """Atıf karşılaştırması için: büyük/küçük harf, noktalama ve tırnak farkını yok sayar."""
+    x = x.replace("İ", "i").replace("I", "ı").lower()
+    return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", x)).strip()
+
+
+def alinti_sayfada_mi(alinti: str, sayfa: str | None) -> bool:
+    """Alıntı sayfada geçiyor mu? "..." ile kesilmiş alıntıların her parçası (en az 8 harf) sayfada olmalı."""
+    if not sayfa:
+        return False
+    duz_sayfa = _duz(sayfa)
+    parcalar = [_duz(p) for p in re.split(r"\.{2,}|…", alinti)]
+    parcalar = [p for p in parcalar if p]
+    return bool(parcalar) and all(len(p) >= 8 and p in duz_sayfa for p in parcalar)
+
+
 def iliski_sirala(satirlar: list[dict], soru: str, n: int = 10) -> list[dict]:
     q = _anahtarlar(soru)
     skor = lambda r: (len(q & _anahtarlar(f"{r['bas']} {r['son']} {r['evidence']}")), r.get("conf") or 0)
@@ -187,10 +203,15 @@ def cevapla(query: Callable, soru: str, generate: Callable[[str], str],
     atiflar, atilan = [], 0
     for a in j.get("atiflar", []) or []:
         sid, q = str(a.get("source_id", "")), str(a.get("quote", "")).strip()
-        tam = sayfa_metni(sid) if sayfa_metni else None
-        gecerli = (sid, q) in izinli or (len(q) >= 8 and tam is not None and _ws(q) in _ws(tam))
-        if gecerli:
+        if (sid, q) in izinli:
             atiflar.append({"source_id": sid, "quote": q})
+            continue
+        # Model bazen doğru alıntıyı yanlış sayfa numarasıyla verir: önce söylediği sayfaya, sonra
+        # modele verilen diğer sayfalara bakılır. Alıntı hiçbirinde yoksa uydurma sayılır.
+        adaylar = [sid] + [x for x in sayfalar_metin if x != sid]
+        bulunan = next((x for x in adaylar if sayfa_metni and alinti_sayfada_mi(q, sayfa_metni(x))), None)
+        if bulunan:
+            atiflar.append({"source_id": bulunan, "quote": q})
         else:
             atilan += 1  # kaynakta bulunamayan atıf: uydurma sayılır ve cevaba girmez
     return Sonuc(str(j.get("cevap", "Kanıt yok")), atiflar, (time.perf_counter() - t0) * 1000,
