@@ -134,20 +134,44 @@ def _ws(x: str) -> str:
     return re.sub(r"\s+", " ", x.replace("’", "'")).strip().lower()
 
 
+def _duz_harita(x: str) -> tuple[str, list[int]]:
+    """Atıf karşılaştırması için normalleştirir (küçük harf, noktalama ve tırnak farkı yok sayılır).
+    Her normalleştirilmiş harfin özgün metindeki konumunu da döndürür."""
+    cikti, harita, bosluk = [], [], True
+    for i, c in enumerate(x):
+        c = "i" if c == "İ" else "ı" if c == "I" else c.lower()[0]
+        if c.isalnum() or c == "_":
+            cikti.append(c); harita.append(i); bosluk = False
+        elif not bosluk:
+            cikti.append(" "); harita.append(i); bosluk = True
+    while cikti and cikti[-1] == " ":
+        cikti.pop(); harita.pop()
+    return "".join(cikti), harita
+
+
 def _duz(x: str) -> str:
-    """Atıf karşılaştırması için: büyük/küçük harf, noktalama ve tırnak farkını yok sayar."""
-    x = x.replace("İ", "i").replace("I", "ı").lower()
-    return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", x)).strip()
+    return _duz_harita(x)[0]
+
+
+def alinti_bul(alinti: str, sayfa: str | None) -> str | None:
+    """Alıntı sayfada geçiyorsa sayfadaki BİREBİR metni döndürür, yoksa None.
+    Model alıntıyı küçük harfle, noktalamasız ya da "..." ile kesik yazabilir; kabul ederiz ama cevaba modelin
+    yazdığı değil kaynağın kendi metni girer, böylece atıf her zaman kaynakta aynen bulunur.
+    "..." ile kesilmiş alıntıda her parça (en az 8 harf) sayfada olmalı; en uzun parçanın metni döner."""
+    if not sayfa:
+        return None
+    duz_sayfa, harita = _duz_harita(sayfa)
+    parcalar = [_duz(p) for p in re.split(r"\.{2,}|…", alinti)]
+    parcalar = [p for p in parcalar if p]
+    if not parcalar or any(len(p) < 8 or p not in duz_sayfa for p in parcalar):
+        return None
+    en_uzun = max(parcalar, key=len)
+    bas = duz_sayfa.index(en_uzun)
+    return sayfa[harita[bas]:harita[bas + len(en_uzun) - 1] + 1]
 
 
 def alinti_sayfada_mi(alinti: str, sayfa: str | None) -> bool:
-    """Alıntı sayfada geçiyor mu? "..." ile kesilmiş alıntıların her parçası (en az 8 harf) sayfada olmalı."""
-    if not sayfa:
-        return False
-    duz_sayfa = _duz(sayfa)
-    parcalar = [_duz(p) for p in re.split(r"\.{2,}|…", alinti)]
-    parcalar = [p for p in parcalar if p]
-    return bool(parcalar) and all(len(p) >= 8 and p in duz_sayfa for p in parcalar)
+    return alinti_bul(alinti, sayfa) is not None
 
 
 def iliski_sirala(satirlar: list[dict], soru: str, n: int = 10) -> list[dict]:
@@ -211,9 +235,14 @@ def cevapla(query: Callable, soru: str, generate: Callable[[str], str],
         # Model bazen doğru alıntıyı yanlış sayfa numarasıyla verir: önce söylediği sayfaya, sonra
         # modele verilen diğer sayfalara bakılır. Alıntı hiçbirinde yoksa uydurma sayılır.
         adaylar = [sid] + [x for x in sayfalar_metin if x != sid]
-        bulunan = next((x for x in adaylar if sayfa_metni and alinti_sayfada_mi(q, sayfa_metni(x))), None)
+        bulunan = None
+        for x in adaylar:
+            metin = alinti_bul(q, sayfa_metni(x)) if sayfa_metni else None
+            if metin:
+                bulunan = (x, metin)
+                break
         if bulunan:
-            atiflar.append({"source_id": bulunan, "quote": q})
+            atiflar.append({"source_id": bulunan[0], "quote": bulunan[1]})  # kaynağın birebir metni
         else:
             atilan += 1  # kaynakta bulunamayan atıf: uydurma sayılır ve cevaba girmez
     return Sonuc(str(j.get("cevap", "Kanıt yok")), atiflar, (time.perf_counter() - t0) * 1000,

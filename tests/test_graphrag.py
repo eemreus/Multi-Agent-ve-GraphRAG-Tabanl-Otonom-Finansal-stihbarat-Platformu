@@ -140,4 +140,18 @@ def test_yanlis_sayfa_numarali_dogru_alinti_duzeltilir():
             return json.dumps({"varliklar": ["Koç Holding"]})
         return json.dumps({"cevap": "%51", "atiflar": [{"source_id": "yanlis_id", "quote": "tüpraş hissesinin yüzde 51'i koç holding'e aittir"}]})
     s = cevapla(fake_query, "Tüpraş hissesinin yüzde kaçı Koç Holding'e aittir?", gen, lambda sid: sayfa if sid == "p1" else None)
-    assert s.atiflar == [{"source_id": "p1", "quote": "tüpraş hissesinin yüzde 51'i koç holding'e aittir"}] and s.atilan_atif == 0
+    # modelin küçük harfli alıntısı değil, sayfadaki birebir metin döner
+    assert s.atiflar == [{"source_id": "p1", "quote": "Tüpraş hissesinin yüzde 51'i Koç Holding'e aittir"}] and s.atilan_atif == 0
+
+
+def test_kabul_edilen_atif_olcum_aracinin_katı_kontrolunu_da_gecer():
+    """src.olcum bir alıntıyı yalnızca kaynakta aynen geçiyorsa sayar; gevşek eşleşen atıf da böyle dönmeli."""
+    from src.graphrag.pipeline import alinti_bul
+    from src.olcum.metrics import Citation, fabricated_citation_rate
+    sayfa = "THY, 300 milyon Euro (355 milyon dolar) değerinde dönüştürülebilir borca yatırım yapacak. Gerekli yasal süreçlerin tamamlanmasının ardından pay sahibi olacak."
+    for model_alintisi in ("thy 300 milyon euro 355 milyon dolar değerinde dönüştürülebilir borca yatırım yapacak",
+                           "THY, 300 milyon Euro ... pay sahibi olacak",
+                           "GEREKLİ YASAL SÜREÇLERİN tamamlanmasının ardından"):
+        metin = alinti_bul(model_alintisi, sayfa)
+        assert metin and metin in sayfa
+        assert fabricated_citation_rate([Citation("p1", metin)], {"p1": sayfa}) == 0.0
