@@ -100,3 +100,24 @@ def test_demo_soru_metni():
         soru_metni(None, "X99", liste)
     with pytest.raises(SystemExit):
         soru_metni(None, None, liste)
+
+
+def test_derinlik_sinirlanir():
+    from src.graphrag.pipeline import SAYFA_KOMSU, derinlik_sinirla, sayfa_komsu_sorgusu
+    assert [derinlik_sinirla(x) for x in (0, 1, 2, 3, 9, -4, "3", "x", None)] == [1, 1, 2, 3, 3, 1, 3, 2, 2]
+    assert "[*1..2]" in SAYFA_KOMSU                      # varsayılan davranış değişmedi
+    assert "[*1..3]" in sayfa_komsu_sorgusu(3)
+    assert "[*1..3]" in sayfa_komsu_sorgusu("99")        # sınırın üstü 3'e iner
+    assert "DROP" not in sayfa_komsu_sorgusu("1; DROP")  # sayı olmayan girdi sorguya girmez
+
+
+def test_sayfa_adaylari_derinligi_sorguya_iletir():
+    from src.graphrag.pipeline import sayfa_adaylari
+    gorulen = []
+
+    def query(q, p):
+        gorulen.append(q)
+        return [{"sid": "s1", "w": 1}]
+
+    assert sayfa_adaylari(query, ["x"], derinlik=3) == ["s1"]
+    assert any("[*1..3]" in q for q in gorulen)

@@ -38,8 +38,27 @@ KOMSU_2 = ("MATCH (a {id: $id})-[]-(b)-[r]-(c) WHERE c.id <> a.id RETURN b.name 
            "startNode(r).name AS bas, endNode(r).name AS son, r.evidence AS evidence, r.source_ids AS source_ids, "
            "r.confidence AS conf ORDER BY r.confidence DESC LIMIT 60")
 SAYFA_TOHUM = "MATCH (a {id: $id}) UNWIND coalesce(a.source_ids, []) AS sid RETURN sid, 10 AS w"
-SAYFA_KOMSU = ("MATCH (a {id: $id})-[*1..2]-(b) WITH DISTINCT b UNWIND coalesce(b.source_ids, []) AS sid "
-               "RETURN sid, count(*) AS w ORDER BY w DESC LIMIT 20")
+MIN_DERINLIK, MAKS_DERINLIK, VARSAYILAN_DERINLIK = 1, 3, 2
+
+
+def derinlik_sinirla(derinlik) -> int:
+    """Graf geçiş derinliğini 1-3 arasına sıkıştırır (REQ-05: multi-hop derinlik sınırı).
+    Cypher'da değişken uzunluklu örüntü parametreyle verilemez, bu yüzden sorguya sayı olarak yazılır;
+    tamsayıya çevirip sınırlamak hem enjeksiyonu hem pahalı sorguları engeller."""
+    try:
+        d = int(derinlik)
+    except (TypeError, ValueError):
+        return VARSAYILAN_DERINLIK
+    return max(MIN_DERINLIK, min(MAKS_DERINLIK, d))
+
+
+def sayfa_komsu_sorgusu(derinlik: int = VARSAYILAN_DERINLIK) -> str:
+    d = derinlik_sinirla(derinlik)
+    return (f"MATCH (a {{id: $id}})-[*1..{d}]-(b) WITH DISTINCT b UNWIND coalesce(b.source_ids, []) AS sid "
+            "RETURN sid, count(*) AS w ORDER BY w DESC LIMIT 20")
+
+
+SAYFA_KOMSU = sayfa_komsu_sorgusu(VARSAYILAN_DERINLIK)
 BAGLA = ("MATCH (n) WHERE (n:Company OR n:Person OR n:Event OR n:Location) AND n.normalized_name IS NOT NULL "
          "AND (n.normalized_name = $norm OR n.normalized_name CONTAINS $norm OR ($norm CONTAINS n.normalized_name "
          "AND size(n.normalized_name) > 4)) RETURN n.id AS id, n.name AS name LIMIT 5")
@@ -119,11 +138,12 @@ def iliski_sirala(satirlar: list[dict], soru: str, n: int = 10) -> list[dict]:
     return sorted(satirlar, key=skor, reverse=True)[:n]
 
 
-def sayfa_adaylari(query: Callable, ids: list[str], maks: int = 16) -> list[str]:
-    """Bağlanan varlıkların kendi sayfaları (ağırlık 10) ve 2 adım komşularının sayfaları."""
+def sayfa_adaylari(query: Callable, ids: list[str], maks: int = 16, derinlik: int = VARSAYILAN_DERINLIK) -> list[str]:
+    """Bağlanan varlıkların kendi sayfaları (ağırlık 10) ve komşularının sayfaları (derinlik 1-3, varsayılan 2)."""
     agirlik: dict[str, float] = {}
+    komsu = sayfa_komsu_sorgusu(derinlik)
     for i in ids:
-        for q in (SAYFA_TOHUM, SAYFA_KOMSU):
+        for q in (SAYFA_TOHUM, komsu):
             for r in query(q, {"id": i}):
                 if r.get("sid"):
                     agirlik[r["sid"]] = agirlik.get(r["sid"], 0) + float(r.get("w") or 1)
