@@ -195,5 +195,5 @@ PostgreSQL ve Neo4j arasındaki köprü `sources.id` alanıdır. Graftaki her il
 - **`sources` tablosu çekim kaydıdır:** Aynı URL farklı zamanlarda çekilirse ayrı satır olur. Aynı içerik `content_hash` ile tespit edilir. `fetched_at` doğrudan raporda gösterilen erişim tarihidir.
 - **Uydurma atıf kontrolü (REQ-06):** `citations.source_id`, mutlaka aynı oturumda `retrievals` tablosuna girmiş bir kaynağa işaret etmelidir. Bu koşulu sağlamayan atıf birinci sınıf hata olarak `agent_logs`'a yazılır.
 - **Çelişki ve dairesel raporlama:** `contradictions` iki iddiayı, `circular_groups` ise aynı ilk habere dayanan kaynak kümesini kaydeder. Güven puanı hesaplanırken bu kaynaklar tek bağımsız kaynak sayılır.
-- **Migration:** Şema Alembic ile yönetilir (Hafta 4 teslimi).
+- **Migration:** Şema Alembic ile yönetilir. İlk migration hazır: [db/README.md](../db/README.md). Uydurma atıf kuralı veritabanında tetikleyici olarak uygulanır.
 - **İndeksler (öneri):** `sources(url)`, `sources(content_hash)`, `retrievals(session_id)`, `claims(report_id)`, `citations(claim_id)`, `agent_logs(session_id, created_at)`.
