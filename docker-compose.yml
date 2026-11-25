@@ -1,4 +1,4 @@
-# Yerel geliştirme için Neo4j. Çalıştırma: docker compose up -d
+# Yerel geliştirme için Neo4j ve PostgreSQL. Çalıştırma: docker compose up -d
 # Tarayıcı arayüzü: http://localhost:7474  (kullanıcı: neo4j, parola: .env içindeki NEO4J_PASSWORD)
 services:
   neo4j:
@@ -16,5 +16,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 12
+  postgres:
+    image: postgres:16
+    container_name: paragoz-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: paragoz
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-paragoz-dev-sifre}
+      POSTGRES_DB: paragoz
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paragoz -d paragoz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
 volumes:
   neo4j_data:
+  postgres_data:
