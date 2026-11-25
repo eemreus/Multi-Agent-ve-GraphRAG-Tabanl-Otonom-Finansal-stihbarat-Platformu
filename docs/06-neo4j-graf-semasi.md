@@ -122,3 +122,7 @@ Bu sorgu vektör aramasıyla tek belgeden cevaplanamaz: bilgi dört farklı ili�
 - Sorgular her zaman indeksli bir başlangıç düğümüyle (`normalized_name`, `ticker`) başlar.
 - Sık sorulan ilişkiler Redis'te önbelleğe alınır.
 - Hedef: p@95 gecikme için örnek eşik 2500 ms (ölçüm Hafta 9).
+
+## Geçiş derinliği sınırı (Hafta 4, REQ-05)
+
+Graf geçişleri en fazla 3 adımla sınırlıdır, varsayılan 2'dir (`src/graphrag/pipeline.py`, `derinlik_sinirla`). Gelen değer tamsayıya çevrilip 1-3 aralığına sıkıştırılır; böylece pahalı uzun geçişler ve Cypher'a sayı dışı metin yazılması engellenir. Kullanıcı ayarı `user_settings.max_graph_depth` (1-3) bu sınıra bağlanacaktır. Varlık bulma ve kimlik aramaları `id` kısıtı ve `normalized_name` indeksi üzerinden yapılır (`cypher/schema.cypher`), ek indeks gerekmedi.
