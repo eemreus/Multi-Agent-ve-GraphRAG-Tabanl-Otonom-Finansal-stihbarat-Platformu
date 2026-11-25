@@ -73,6 +73,6 @@ Atıf doğrulaması düzeltildikten sonra 40 soru aynı donanımda yeniden ölç
 
 **Ne oldu:** Atıf doğrulaması esnetildi (büyük/küçük harf, noktalama ve "..." ile kesik alıntılar kabul edildi) ama kabul edilen atıf, modelin yazdığı biçimle saklandı. Ölçüm aracı alıntıyı kaynakta birebir aradığı için bu atıfları uydurma saydı ve oran %9,4'e çıktı. Düzeltme: kabul edilen atıf artık kaynak sayfadaki birebir metinle döner (`alinti_bul`). Oran %0'a indi.
 
-**Sonuç:** Cevaplar değişmediği için F1 aynı kaldı. Gecikme biraz düştü (Ollama ısınmış, soru başına tek model çağrısı daha az) ama hedefin çok üstünde. F1 farkı ve gecikme hedefleri hâlâ karşılanmıyor; bunlar yukarıdaki "Sonraki adımlar"a bağlı (hibrit erişim, daha güçlü model, modelsiz varlık bulma).
+**Sonuç:** Cevaplar değişmediği için F1 aynı kaldı. Gecikme biraz düştü (27,4 sn → 20,7 sn). Bu hafta gecikmeyi düşürecek bir değişiklik yapmadık, soru başına hâlâ iki model çağrısı var; fark büyük ihtimalle Ollama'nın ısınmış olmasından ve ölçüm oynamasından geliyor. Hedefin çok üstünde. F1 farkı ve gecikme hedefleri hâlâ karşılanmıyor; bunlar yukarıdaki "Sonraki adımlar"a bağlı (hibrit erişim, daha güçlü model, modelsiz varlık bulma).
 
 **Ders:** Bir doğrulama kuralını gevşetirken ölçüm aracının kendi kuralıyla aynı çıktıyı kabul ettiğini test etmek gerekiyor (`test_kabul_edilen_atif_olcum_aracinin_kati_kontrolunu_da_gecer`).
