@@ -35,7 +35,7 @@ class Yanit(BaseModel):
 def varsayilan_servis() -> SorServisi:
     """AGENT_URL tanımlıysa ajan servisini HTTP ile çağırır (mikro servis modu); yoksa GraphRAG hattı bu süreçte
     çalışır (tek parça mod, Neo4j ve Ollama açık olmalı). İlk istekte kurulur."""
-    from src.graphrag.kurulum import gercek_cevapla, model_adi
+    from src.graphrag.kurulum import HAT_SURUMU, gercek_cevapla, model_adi
 
     from .ajan_istemci import AjanIstemcisi
     from .onbellek import ortamdan as onbellek_ortamdan
@@ -45,7 +45,7 @@ def varsayilan_servis() -> SorServisi:
     return SorServisi(cevapla_fn,
                       telemetri=telemetri_ortamdan(),   # DATABASE_URL varsa agent_logs'a yazar
                       onbellek=onbellek_ortamdan(),     # REDIS_URL varsa Redis önbelleği
-                      surum=f"{model_adi()}:v1")
+                      surum=f"{model_adi()}:hat{HAT_SURUMU}")
 
 
 def uygulama_olustur(servis: SorServisi | None = None, anahtarlar: ApiAnahtarlari | None = None,

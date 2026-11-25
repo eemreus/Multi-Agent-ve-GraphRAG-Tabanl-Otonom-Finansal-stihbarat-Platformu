@@ -4,6 +4,10 @@ from __future__ import annotations
 import os
 
 
+# Atıf doğrulama, istem ya da arama mantığı değişince bir artırılır: Redis'teki eski cevaplar bu sayede geçersiz olur.
+HAT_SURUMU = "2"
+
+
 def model_adi() -> str:
     return os.getenv("OLLAMA_MODEL", "llama3.1:8b")
 
