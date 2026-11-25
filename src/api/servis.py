@@ -57,6 +57,8 @@ class SorServisi:
             gecikme = int((time.perf_counter() - t0) * 1000)
             self.telemetri({"agent_name": "graphrag", "event_type": "sor", "latency_ms": gecikme,
                             "error_code": hata, "payload": ozet})
-        if self.onbellek is not None:
-            self.onbellek.set(anahtar, yanit)  # yalnızca başarılı cevap; hata yukarıda raise ile çıktı
+        # Yalnızca kanıtlı cevap saklanır: hata yukarıda raise ile çıktı; atıfsız ya da "Kanıt yok"
+        # cevabı saklamak kötü sonucu önbellek süresince (1 saat) tekrarlatırdı.
+        if self.onbellek is not None and yanit["atiflar"] and yanit["cevap"].strip().lower() != "kanıt yok":
+            self.onbellek.set(anahtar, yanit)
         return {**yanit, "gecikme_ms": gecikme, "onbellek": False}

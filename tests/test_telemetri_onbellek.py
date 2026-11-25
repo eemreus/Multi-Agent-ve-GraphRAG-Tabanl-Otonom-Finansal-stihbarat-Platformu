@@ -164,3 +164,14 @@ def test_rapor_yuvarlar_ve_sorguyu_parametreyle_calistirir():
     assert r["p95_ms"] == 27124.0 and r["model_istegi"] == 40 and r["onbellek_isabeti"] == 10
     assert gelen[0][1] == {"saat": 6} and "percentile_cont(0.95)" in gelen[0][0]
     assert rapor(lambda s, p: [])  == {}                       # kayıt yoksa boş rapor
+
+
+def test_atifsiz_ya_da_kanit_yok_cevabi_onbellege_girmez():
+    cagri = []
+
+    def fn(q):
+        cagri.append(q)
+        return Sonuc("Kanıt yok", [], 5.0, 0, [], 0) if len(cagri) == 1 else Sonuc("Enerjisa", [], 5.0, 3, [], 3)
+    s = SorServisi(fn, onbellek=BellekOnbellek())
+    s.sor("geçerli bir soru"); s.sor("geçerli bir soru"); s.sor("geçerli bir soru")
+    assert len(cagri) == 3                     # üçü de modele gitti, kötü cevap saklanmadı

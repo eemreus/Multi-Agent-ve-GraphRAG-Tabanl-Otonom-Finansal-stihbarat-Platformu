@@ -121,3 +121,23 @@ def test_sayfa_adaylari_derinligi_sorguya_iletir():
 
     assert sayfa_adaylari(query, ["x"], derinlik=3) == ["s1"]
     assert any("[*1..3]" in q for q in gorulen)
+
+
+def test_atif_dogrulama_esnek_ama_uydurmayi_yine_eler():
+    from src.graphrag.pipeline import alinti_sayfada_mi
+    sayfa = "Tüpraş hissesinin yüzde 51'i Koç Holding'e aittir. Şirket 2023 yılında yeni yatırım duyurdu."
+    assert alinti_sayfada_mi("TÜPRAŞ hissesinin yüzde 51’i Koç Holding’e aittir", sayfa)       # harf/noktalama farkı
+    assert alinti_sayfada_mi("Tüpraş hissesinin yüzde 51'i ... yeni yatırım duyurdu.", sayfa)   # "..." ile kesilmiş
+    assert not alinti_sayfada_mi("Tüpraş hissesinin yüzde 80'i Koç Holding'e aittir", sayfa)    # değiştirilmiş rakam
+    assert not alinti_sayfada_mi("kısa", sayfa) and not alinti_sayfada_mi("x" * 20, None)
+
+
+def test_yanlis_sayfa_numarali_dogru_alinti_duzeltilir():
+    sayfa = "Tüpraş hissesinin yüzde 51'i Koç Holding'e aittir."
+
+    def gen(prompt):
+        if "varliklar" in prompt:
+            return json.dumps({"varliklar": ["Koç Holding"]})
+        return json.dumps({"cevap": "%51", "atiflar": [{"source_id": "yanlis_id", "quote": "tüpraş hissesinin yüzde 51'i koç holding'e aittir"}]})
+    s = cevapla(fake_query, "Tüpraş hissesinin yüzde kaçı Koç Holding'e aittir?", gen, lambda sid: sayfa if sid == "p1" else None)
+    assert s.atiflar == [{"source_id": "p1", "quote": "tüpraş hissesinin yüzde 51'i koç holding'e aittir"}] and s.atilan_atif == 0
