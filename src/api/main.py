@@ -8,6 +8,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
+from .ajan_istemci import AjanHatasi, AjanZamanAsimi
 from .guvenlik import ApiAnahtarlari, HizSiniri
 from .servis import GecersizSoru, SorServisi
 
@@ -32,24 +33,19 @@ class Yanit(BaseModel):
 
 
 def varsayilan_servis() -> SorServisi:
-    """Gerçek GraphRAG hattı (Neo4j ve Ollama açık olmalı). İlk istekte kurulur."""
-    from src.graf.extractor import ollama_generate
-    from src.graf.writer import neo4j_reader, neo4j_runner
-    from src.graphrag.degerlendir import sayfa_okuyucu
-    from src.graphrag.pipeline import cevapla
+    """AGENT_URL tanımlıysa ajan servisini HTTP ile çağırır (mikro servis modu); yoksa GraphRAG hattı bu süreçte
+    çalışır (tek parça mod, Neo4j ve Ollama açık olmalı). İlk istekte kurulur."""
+    from src.graphrag.kurulum import gercek_cevapla, model_adi
 
-    model = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
-    url = os.getenv("OLLAMA_URL", "http://localhost:11434")
-    _, driver = neo4j_runner(os.getenv("NEO4J_URI", "bolt://localhost:7687"), os.getenv("NEO4J_USER", "neo4j"),
-                             os.getenv("NEO4J_PASSWORD", "paragoz-dev-sifre"))
-    okuyucu, sayfa = neo4j_reader(driver), sayfa_okuyucu()
+    from .ajan_istemci import AjanIstemcisi
     from .onbellek import ortamdan as onbellek_ortamdan
     from .telemetri import ortamdan as telemetri_ortamdan
 
-    return SorServisi(lambda soru: cevapla(okuyucu, soru, lambda p: ollama_generate(p, model, url), sayfa),
+    cevapla_fn = AjanIstemcisi.ortamdan() or gercek_cevapla()
+    return SorServisi(cevapla_fn,
                       telemetri=telemetri_ortamdan(),   # DATABASE_URL varsa agent_logs'a yazar
                       onbellek=onbellek_ortamdan(),     # REDIS_URL varsa Redis önbelleği
-                      surum=f"{model}:v1")
+                      surum=f"{model_adi()}:v1")
 
 
 def uygulama_olustur(servis: SorServisi | None = None, anahtarlar: ApiAnahtarlari | None = None,
@@ -84,6 +80,10 @@ def uygulama_olustur(servis: SorServisi | None = None, anahtarlar: ApiAnahtarlar
             return Yanit(**durum["servis"].sor(istek.soru))
         except GecersizSoru as e:
             raise HTTPException(422, str(e))
+        except AjanZamanAsimi:
+            raise HTTPException(504, "Ajan servisi zamanında cevap vermedi.")
+        except AjanHatasi:
+            raise HTTPException(502, "Ajan servisine ulaşılamadı.")
 
     return app
 

@@ -64,3 +64,24 @@ Kurallar:
 ## Sonraki adımlar
 - Anahtarları `api_keys` tablosundan okumak (şimdilik `API_KEYS` ortam değişkeni)
 - `/sor` isteğine `derinlik` alanı eklemek (`pipeline.derinlik_sinirla` hazır, 1-3)
+
+## Mikro servis modu (Hafta 4)
+
+Gateway ile GraphRAG ajanı ayrı süreçler olarak çalışabilir:
+
+```
+istemci --X-API-Key--> gateway (:8000) --X-Internal-Token--> graphrag-agent (:8001) --> Neo4j, Ollama
+                          |-> Redis (önbellek), PostgreSQL (agent_logs)
+```
+
+| Servis | Dosya | Görevi |
+|---|---|---|
+| gateway | `src/api/main.py` | Kimlik, istek sınırı, önbellek, telemetri. Soruyu ajana iletir. |
+| graphrag-agent | `src/agent/main.py` | Graf araması ve cevap üretimi. Yalnızca gateway çağırır (`POST /cevapla`). |
+
+- `AGENT_URL` tanımlıysa gateway ajanı HTTP ile çağırır; tanımlı değilse hat gateway içinde çalışır (eski tek parça mod).
+- İç servis `INTERNAL_TOKEN` ister. Token tanımlı değilse ajan her isteği reddeder.
+- Ajan kapalıysa gateway `502`, zaman aşımında `504` döner.
+- Docker ile hepsi: `docker compose up -d --build` (Ollama ana makinede açık olmalı; ajan ona `host.docker.internal` ile ulaşır).
+- Elle: `uvicorn src.agent.main:app --port 8001` ve `$env:AGENT_URL="http://127.0.0.1:8001"; uvicorn src.api.main:app`.
+- `data/` klasörü imaja kopyalanmaz, ajana salt okunur bağlanır.
