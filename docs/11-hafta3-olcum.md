@@ -60,3 +60,19 @@ Hedeflerden yalnızca uydurma atıf oranı karşılandı. GraphRAG'in vektör RA
 - Hibrit erişim: graf ile bulunan sayfalara ek olarak vektör araması sonuçlarını birleştirmek.
 - Çıkarım kalitesini artırmak (daha güçlü model ya da API modeli ile ilişki çıkarımı), böylece grafın sayfa kapsamı genişler.
 - Varlık bulma çağrısını modelsiz yapıp gecikmeyi düşürmek.
+
+## Hafta 4 güncellemesi (25 Kasım 2026)
+
+Atıf doğrulaması düzeltildikten sonra 40 soru aynı donanımda yeniden ölçüldü (`python -m src.graphrag.degerlendir`, ardından `python -m src.olcum.run`).
+
+| Metrik | Hafta 3 | Atıf esnetildikten sonra (hatalı) | Hafta 4 son | Hedef |
+|---|---|---|---|---|
+| F1 farkı (GraphRAG vs vektör) | −%13 (0,443 / 0,509) | −%13 | −%13 (0,443 / 0,509) | ≥ +%20 |
+| Uydurma atıf oranı | %0 | **%9,4** | **%0** | < %5 |
+| p95 gecikme | 27,4 sn | 21,6 sn | 20,7 sn | < 2,5 sn |
+
+**Ne oldu:** Atıf doğrulaması esnetildi (büyük/küçük harf, noktalama ve "..." ile kesik alıntılar kabul edildi) ama kabul edilen atıf, modelin yazdığı biçimle saklandı. Ölçüm aracı alıntıyı kaynakta birebir aradığı için bu atıfları uydurma saydı ve oran %9,4'e çıktı. Düzeltme: kabul edilen atıf artık kaynak sayfadaki birebir metinle döner (`alinti_bul`). Oran %0'a indi.
+
+**Sonuç:** Cevaplar değişmediği için F1 aynı kaldı. Gecikme biraz düştü (Ollama ısınmış, soru başına tek model çağrısı daha az) ama hedefin çok üstünde. F1 farkı ve gecikme hedefleri hâlâ karşılanmıyor; bunlar yukarıdaki "Sonraki adımlar"a bağlı (hibrit erişim, daha güçlü model, modelsiz varlık bulma).
+
+**Ders:** Bir doğrulama kuralını gevşetirken ölçüm aracının kendi kuralıyla aynı çıktıyı kabul ettiğini test etmek gerekiyor (`test_kabul_edilen_atif_olcum_aracinin_kati_kontrolunu_da_gecer`).
