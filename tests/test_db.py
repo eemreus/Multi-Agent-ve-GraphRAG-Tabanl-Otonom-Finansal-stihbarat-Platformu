@@ -62,6 +62,10 @@ def test_uydurma_atif_tetikleyicisi_gercek_veritabaninda():
     with engine.connect() as c:
         tx = c.begin()
         try:
+            # Geçici şema: asıl tablolar (alembic upgrade head) zaten kurulu olsa da test onlara dokunmaz,
+            # sonunda geri sarılınca geçici şema da silinir.
+            c.execute(text("CREATE SCHEMA test_atif"))
+            c.execute(text("SET LOCAL search_path TO test_atif, public"))
             for d in dosya_oku("0001_ilk_sema.sql"):
                 c.exec_driver_sql(d)
             c.execute(text("INSERT INTO users(email,password_hash) VALUES('a@b.c','x')"))
