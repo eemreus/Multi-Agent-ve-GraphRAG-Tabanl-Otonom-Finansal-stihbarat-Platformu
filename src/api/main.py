@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 
 from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
 from .guvenlik import ApiAnahtarlari, HizSiniri
@@ -59,6 +60,10 @@ def uygulama_olustur(servis: SorServisi | None = None, anahtarlar: ApiAnahtarlar
         if not izinli:
             raise HTTPException(429, "İstek sınırı aşıldı.", headers={"Retry-After": str(int(bekle) + 1)})
         return x_api_key
+
+    @app.get("/", include_in_schema=False)
+    def kok() -> RedirectResponse:
+        return RedirectResponse("/docs")
 
     @app.get("/saglik", tags=["sistem"], summary="Servis ayakta mı?")
     def saglik() -> dict:

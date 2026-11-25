@@ -70,6 +70,7 @@ def test_fastapi_uc_noktalari():
     app = uygulama_olustur(servis, ApiAnahtarlari(["anahtar"]), HizSiniri(maks=2, pencere_sn=60))
     c = TestClient(app)
     assert c.get("/saglik").json() == {"durum": "ok"}
+    assert c.get("/", follow_redirects=False).headers["location"] == "/docs"
     assert c.post("/sor", json={"soru": "test sorusu"}).status_code == 401
     assert c.post("/sor", json={"soru": "test sorusu"}, headers={"X-API-Key": "yanlis"}).status_code == 401
     ok = c.post("/sor", json={"soru": "test sorusu"}, headers={"X-API-Key": "anahtar"})
